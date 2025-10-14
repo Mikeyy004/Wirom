@@ -59,7 +59,14 @@
     </nav>
     <div class="header-actions">
       <button class="theme-toggle btn-mini" id="themeToggle" aria-pressed="false" title="Toggle theme">Light</button>
-      <a class="btn btn-primary btn-mini" href="https://wa.me/263717313810?text=Hi%20Wirom%2C%20I%27d%20like%20to%20buy%20a%20car" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn btn-primary btn-mini icon-btn" href="https://wa.me/263717313810?text=Hi%20Wirom%2C%20I%27d%20like%20to%20buy%20a%20car" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+        <!-- Official-style WhatsApp icon: green circle with white phone -->
+        <svg class="wa-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="12" cy="12" r="10" fill="#25D366" />
+          <path d="M17.472 14.382c-.297-.149-1.758-.864-2.028-.962-.273-.1-.472-.148-.672.149-.198.297-.767.962-.94 1.158-.173.198-.346.223-.643.074-.297-.149-1.255-.462-2.39-1.47-.88-.78-1.47-1.73-1.64-2.03-.173-.297-.018-.458.13-.606.134-.132.298-.344.446-.518.149-.173.198-.298.298-.497.099-.198.05-.37-.025-.52-.075-.149-.67-1.611-.92-2.208-.244-.597-.49-.515-.67-.525l-.57-.011c-.198 0-.51.074-.778.34-.267.267-1.01 1.01-1.01 2.46 0 1.45 1.04 2.86 1.19 3.06.149.198 2.01 3.36 4.88 4.72 2.87 1.36 2.87.89 3.39.84.52-.05 1.78-.72 2.03-1.39.246-.68.246-1.266.173-1.39-.074-.123-.272-.198-.57-.347z" fill="#fff"/>
+        </svg>
+        <span class="sr-only">WhatsApp</span>
+      </a>
       <a class="btn btn-ghost btn-mini" href="tel:+263717313810">Call</a>
     </div>
   </header>
@@ -80,55 +87,37 @@
             <a class="btn btn-primary" href="#inventory">Browse Inventory</a>
             <button class="btn btn-ghost" id="scrollToContact">Get in touch</button>
           </div>
-          <div class="highlights">
-            <div class="highlight"><strong>50-point</strong> inspection on every car</div>
-            <div class="highlight"><strong>3-month</strong> lay-by plan</div>
-            <div class="highlight"><strong>Book & test-drive</strong> today</div>
-          </div>
         </div>
-
-        <div class="hero__visual reveal" style="--i:0">
-          <div class="car-card" id="parallaxCard">
-            <img id="heroImage" src="images/passo.png" alt="Toyota Passo 2016 hatchback" loading="eager"/>
-            <div class="car-meta">
-              <div>
-                <div id="heroCarName" style="font-weight:800">2016 Toyota Passo</div>
-                <div id="heroCarFuel" class="muted" style="font-size:13px">Petrol</div>
-              </div>
-              <div id="heroCarPrice" class="badge" aria-label="Price 4500 dollars">$4,500</div>
-            </div>
+        <div class="hero__visual">
+          <div class="car-card">
+            <img id="heroImage" src="https://scontent.fhre1-2.fna.fbcdn.net/v/t39.30808-6/561726507_1216526417178779_3779744219711410456_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=103&ccb=1-7&_nc_sid=127cfc&_nc_ohc=jRh8rjm2nJwQ7kNvwGOE4YG&_nc_oc=AdmvNV0lFseXsD8zqbicwNeLqOVPL5iDGRupIPgyw0leNgBpyh7NP1u2HZ6Wix0mF4I&_nc_zt=23&_nc_ht=scontent.fhre1-2.fna&_nc_gid=PCJCBxKomcBJkWOuxkgXHQ&oh=00_Aff8zwy2200lU7dX3v7sdi6aF3OdYA-Th22TtkkR6dj8Sw&oe=68F3741F" alt="2016 Toyota Passo" />
+            <div class="car-meta"><span class="badge" id="heroCarName">2016 Toyota Passo</span><span class="badge" id="heroCarPrice">$4,500</span></div>
           </div>
-
-        <div class="hero-thumbs" role="tablist" aria-label="Hero images">
-          <button class="hero-thumb is-active" role="tab" aria-selected="true" data-src="images/passo.png" data-name="2016 Toyota Passo" data-price="4500" data-fuel="Petrol" data-meta="89,000 km • Petrol • Auto" onclick="switchHeroCar(this)">
-            <img src="images/passo.png" alt="Toyota Passo thumbnail" loading="lazy"/>
-          </button>
-          <button class="hero-thumb" role="tab" aria-selected="false" data-src="images/probox.jpg" data-name="Toyota Probox Diesel" data-price="5500" data-fuel="Diesel" data-meta="Diesel" onclick="switchHeroCar(this)">
-            <img src="images/probox.jpg" alt="Toyota Probox thumbnail" loading="lazy"/>
-          </button>
-          <button class="hero-thumb" role="tab" aria-selected="false" data-src="images/sienna.png" data-name="Toyota Sienta 2016" data-price="6500" data-fuel="Petrol" data-meta="Petrol • Auto" onclick="switchHeroCar(this)">
-            <img src="images/sienna.png" alt="Toyota Sienta thumbnail" loading="lazy"/>
-          </button>
-        </div>
+          <div class="hero-thumbs">
+            <div class="hero-thumb is-active" data-src="https://scontent.fhre1-2.fna.fbcdn.net/v/t39.30808-6/561726507_1216526417178779_3779744219711410456_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=103&ccb=1-7&_nc_sid=127cfc&_nc_ohc=jRh8rjm2nJwQ7kNvwGOE4YG&_nc_oc=AdmvNV0lFseXsD8zqbicwNeLqOVPL5iDGRupIPgyw0leNgBpyh7NP1u2HZ6Wix0mF4I&_nc_zt=23&_nc_ht=scontent.fhre1-2.fna&_nc_gid=PCJCBxKomcBJkWOuxkgXHQ&oh=00_Aff8zwy2200lU7dX3v7sdi6aF3OdYA-Th22TtkkR6dj8Sw&oe=68F3741F" data-name="2016 Toyota Passo" data-price="4500" data-fuel="Petrol"><img src="https://scontent.fhre1-2.fna.fbcdn.net/v/t39.30808-6/561726507_1216526417178779_3779744219711410456_n.jpg?stp=dst-jpg_s150x150_tt6&_nc_cat=103&ccb=1-7&_nc_sid=127cfc&_nc_ohc=jRh8rjm2nJwQ7kNvwGOE4YG&_nc_oc=AdmvNV0lFseXsD8zqbicwNeLqOVPL5iDGRupIPgyw0leNgBpyh7NP1u2HZ6Wix0mF4I&_nc_zt=23&_nc_ht=scontent.fhre1-2.fna&_nc_gid=PCJCBxKomcBJkWOuxkgXHQ&oh=00_Aff8zwy2200lU7dX3v7sdi6aF3OdYA-Th22TtkkR6dj8Sw&oe=68F3741F" alt="Passo thumb" /></div>
+            <div class="hero-thumb" data-src="https://scontent.fhre1-2.fna.fbcdn.net/v/t39.30808-6/561067364_1215629283935159_5761146081770315269_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=110&ccb=1-7&_nc_sid=127cfc&_nc_ohc=ylFza_mGYEQQ7kNvwE2lGFY&_nc_oc=AdnHeWCJucbOPWLtMuB0tetwV2OCQpJOt7q-cnbBWdR44sudslSbgskIepimiWYMDfo&_nc_zt=23&_nc_ht=scontent.fhre1-2.fna&_nc_gid=9fWbDqKA9n5_EmsU9kYzew&oh=00_Aff9ufBIc31XZxlcom-C8ar0iC47yVCxvLNphxDCEGO0Qg&oe=68F37F83" data-name="Toyota Probox Diesel" data-price="5500" data-fuel="Diesel"><img src="https://scontent.fhre1-2.fna.fbcdn.net/v/t39.30808-6/561067364_1215629283935159_5761146081770315269_n.jpg?stp=dst-jpg_s150x150_tt6&_nc_cat=110&ccb=1-7&_nc_sid=127cfc&_nc_ohc=ylFza_mGYEQQ7kNvwE2lGFY&_nc_oc=AdnHeWCJucbOPWLtMuB0tetwV2OCQpJOt7q-cnbBWdR44sudslSbgskIepimiWYMDfo&_nc_zt=23&_nc_ht=scontent.fhre1-2.fna&_nc_gid=9fWbDqKA9n5_EmsU9kYzew&oh=00_Aff9ufBIc31XZxlcom-C8ar0iC47yVCxvLNphxDCEGO0Qg&oe=68F37F83" alt="Probox thumb" /></div>
+            <div class="hero-thumb" data-src="https://scontent.fhre1-1.fna.fbcdn.net/v/t39.30808-6/559718450_1212807200884034_6068470942309837240_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_ohc=rwlaJeJlgZQQ7kNvwGoUQ57&_nc_oc=AdnqhDjXYi4MwPe7LpB7lG514GSYK3_Q1_kA6Xkibse1QBcRZqb59eSrGbg7nEq5-7I&_nc_zt=23&_nc_ht=scontent.fhre1-1.fna&_nc_gid=9fWbDqKA9n5_EmsU9kYzew&oh=00_Afe6oFvhDKKygMNQtL1U8HX4vF7WlCL4mAImKj2bd8cuoQ&oe=68F38112" data-name="Toyota Sienta 2016" data-price="6500" data-fuel="Petrol"><img src="https://scontent.fhre1-1.fna.fbcdn.net/v/t39.30808-6/559718450_1212807200884034_6068470942309837240_n.jpg?stp=dst-jpg_s150x150_tt6&_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_ohc=rwlaJeJlgZQQ7kNvwGoUQ57&_nc_oc=AdnqhDjXYi4MwPe7LpB7lG514GSYK3_Q1_kA6Xkibse1QBcRZqb59eSrGbg7nEq5-7I&_nc_zt=23&_nc_ht=scontent.fhre1-1.fna&_nc_gid=9fWbDqKA9n5_EmsU9kYzew&oh=00_Afe6oFvhDKKygMNQtL1U8HX4vF7WlCL4mAImKj2bd8cuoQ&oe=68F38112" alt="Sienta thumb" /></div>
+            <div class="hero-thumb" data-src="https://scontent.fhre1-1.fna.fbcdn.net/v/t39.30808-6/557315085_1205580638273357_5682791355014002946_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=1HX1WYzDA1oQ7kNvwEbnguK&_nc_oc=Adm5-RSoAYH_YhwwvRkGx3Qxl67B2lPTFxOldb93FrDMN85aIkSto1boKVS56N5N8_A&_nc_zt=23&_nc_ht=scontent.fhre1-1.fna&_nc_gid=IulsciHTnas2yM331nRJMg&oh=00_AfcPqnn5fyLhwrn1yqY-O_Usl7W2wobrr71mCw7sCZnUBA&oe=68F370F2" data-name="Toyota Corolla Cross 2021" data-price="21000" data-fuel="Petrol • Auto"><img src="https://scontent.fhre1-1.fna.fbcdn.net/v/t39.30808-6/557315085_1205580638273357_5682791355014002946_n.jpg?stp=dst-jpg_s150x150_tt6&_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=1HX1WYzDA1oQ7kNvwEbnguK&_nc_oc=Adm5-RSoAYH_YhwwvRkGx3Qxl67B2lPTFxOldb93FrDMN85aIkSto1boKVS56N5N8_A&_nc_zt=23&_nc_ht=scontent.fhre1-1.fna&_nc_gid=IulsciHTnas2yM331nRJMg&oh=00_AfcPqnn5fyLhwrn1yqY-O_Usl7W2wobrr71mCw7sCZnUBA&oe=68F370F2" alt="Corolla Cross thumb" /></div>
+            <div class="hero-thumb" data-src="https://scontent.fhre1-2.fna.fbcdn.net/v/t51.82787-15/561167624_17980479323868042_7753240109467543809_n.webp?stp=dst-jpg_s600x600_tt6&_nc_cat=109&ccb=1-7&_nc_sid=127cfc&_nc_ohc=xTAhWV3QkG4Q7kNvwFEDsiY&_nc_oc=AdmRMZuu2siaymb-CgITAq4H8LHElEfrY3-FavRYSeL3HZpdyLob5j6k7XQ1_EavHP4&_nc_zt=23&_nc_ht=scontent.fhre1-2.fna&_nc_gid=9fWbDqKA9n5_EmsU9kYzew&oh=00_Afc1pG8F_wA2BZl_vzUgASZpLec5MZRBTa4BlLUI0_Q3ng&oe=68F360BC" data-name="BMW X1 2017" data-price="9500" data-fuel="Petrol • Auto"><img src="https://scontent.fhre1-2.fna.fbcdn.net/v/t51.82787-15/561167624_17980479323868042_7753240109467543809_n.webp?stp=dst-jpg_s150x150_tt6&_nc_cat=109&ccb=1-7&_nc_sid=127cfc&_nc_ohc=xTAhWV3QkG4Q7kNvwFEDsiY&_nc_oc=AdmRMZuu2siaymb-CgITAq4H8LHElEfrY3-FavRYSeL3HZpdyLob5j6k7XQ1_EavHP4&_nc_zt=23&_nc_ht=scontent.fhre1-2.fna&_nc_gid=9fWbDqKA9n5_EmsU9kYzew&oh=00_Afc1pG8F_wA2BZl_vzUgASZpLec5MZRBTa4BlLUI0_Q3ng&oe=68F360BC" alt="BMW X1 thumb" /></div>
+            <div class="hero-thumb" data-src="https://scontent.fhre1-1.fna.fbcdn.net/v/t51.82787-15/559981604_17980280630868042_3725572623606102803_n.webp?stp=dst-jpg_s600x600_tt6&_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=bC--sb40d0wQ7kNvwEXVpZB&_nc_oc=AdmsMU9aa4bNX3jUQmDc1yjIiMMAEPBlEpoUXfFdCZKH4lmO-6jLM7eAVkmm8ZFi9hg&_nc_zt=23&_nc_ht=scontent.fhre1-1.fna&_nc_gid=IulsciHTnas2yM331nRJMg&oh=00_Afe4sSOQucrPWDWOu7-oGdBRTBvfePPbSWfMdn8mhKOZ3g&oe=68F387D1" data-name="BMW 1 Series" data-price="6000" data-fuel="Petrol • Auto"><img src="https://scontent.fhre1-1.fna.fbcdn.net/v/t51.82787-15/559981604_17980280630868042_3725572623606102803_n.webp?stp=dst-jpg_s150x150_tt6&_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=bC--sb40d0wQ7kNvwEXVpZB&_nc_oc=AdmsMU9aa4bNX3jUQmDc1yjIiMMAEPBlEpoUXfFdCZKH4lmO-6jLM7eAVkmm8ZFi9hg&_nc_zt=23&_nc_ht=scontent.fhre1-1.fna&_nc_gid=IulsciHTnas2yM331nRJMg&oh=00_Afe4sSOQucrPWDWOu7-oGdBRTBvfePPbSWfMdn8mhKOZ3g&oe=68F387D1" alt="BMW 1 thumb" /></div>
+            <div class="hero-thumb" data-src="https://scontent.fhre1-2.fna.fbcdn.net/v/t51.82787-15/547779259_17977472714868042_61153380126499210_n.webp?stp=dst-jpg_s600x600_tt6&_nc_cat=104&ccb=1-7&_nc_sid=127cfc&_nc_ohc=exCO1MRgczwQ7kNvwG4RBl0&_nc_oc=AdmzK0svMs8S8kQXhU0RdME5FAb2LHZt8YTPAT_qw3hwcFW4WiIXV67VVrc8kh5e16Y&_nc_zt=23&_nc_ht=scontent.fhre1-2.fna&_nc_gid=K0vdmsRIyhDhyd-LWHqjiA&oh=00_Afcgg5uesMarHZ0pFYJ0OADBfGuTA1siPaorbWkVSl2GLw&oe=68F358B7" data-name="Mercedes Benz GLC 220d" data-price="17000" data-fuel="Diesel • Auto"><img src="https://scontent.fhre1-2.fna.fbcdn.net/v/t51.82787-15/547779259_17977472714868042_61153380126499210_n.webp?stp=dst-jpg_s150x150_tt6&_nc_cat=104&ccb=1-7&_nc_sid=127cfc&_nc_ohc=exCO1MRgczwQ7kNvwG4RBl0&_nc_oc=AdmzK0svMs8S8kQXhU0RdME5FAb2LHZt8YTPAT_qw3hwcFW4WiIXV67VVrc8kh5e16Y&_nc_zt=23&_nc_ht=scontent.fhre1-2.fna&_nc_gid=K0vdmsRIyhDhyd-LWHqjiA&oh=00_Afcgg5uesMarHZ0pFYJ0OADBfGuTA1siPaorbWkVSl2GLw&oe=68F358B7" alt="GLC 220d thumb" /></div>
+          </div>
         </div>
       </div>
-
-      <!-- subtle background shapes -->
-      <svg style="position:absolute;right:-120px;top:-40px;opacity:.06;transform:rotate(8deg)" width="600" height="600" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="300" cy="300" r="300" fill="url(#g)"/></svg>
     </section>
 
     <section class="section" id="inventory">
       <h2>Cars In Stock</h2>
       <p class="muted">Browse cars ready to buy now, or order directly from Japan with our experts.</p>
-
-      <div class="filters" aria-label="Inventory filters">
-        <input id="searchInput" type="search" placeholder="Search make or model" aria-label="Search cars" />
-        <select id="typeSelect" aria-label="Vehicle type">
+      <div class="filters">
+        <input id="searchInput" type="search" placeholder="Search make or model" aria-label="Search make or model" />
+        <select id="typeSelect" aria-label="Car type">
           <option value="">All types</option>
           <option value="sedan">Sedan</option>
           <option value="suv">SUV</option>
           <option value="pickup">Pickup</option>
           <option value="hatchback">Hatchback</option>
+          <option value="van">Van</option>
         </select>
         <select id="priceSelect" aria-label="Max price">
           <option value="">Any price</option>
@@ -183,7 +172,7 @@
           <div class="price-row"><div class="permo">Petrol • Auto</div><div class="price">$21,000</div></div>
         </article>
 
-
+        
         <article class="card reveal" data-type="suv" data-price="17000" data-name="Mercedes Benz GLC 220d" onclick="location.href='car.html?name=Mercedes%20Benz%20GLC%20220d&price=17000&img=https%3A%2F%2Fscontent.fhre1-2.fna.fbcdn.net%2Fv%2Ft51.82787-15%2F547779259_17977472714868042_61153380126499210_n.webp%3Fstp%3Ddst-jpg_s600x600_tt6%26_nc_cat%3D104%26ccb%3D1-7%26_nc_sid%3D127cfc%26_nc_ohc%3DexCO1MRgczwQ7kNvwG4RBl0%26_nc_oc%3DAdmzK0svMs8S8kQXhU0RdME5FAb2LHZt8YTPAT_qw3hwcFW4WiIXV67VVrc8kh5e16Y%26_nc_zt%3D23%26_nc_ht%3Dscontent.fhre1-2.fna%26_nc_gid%3DK0vdmsRIyhDhyd-LWHqjiA%26oh%3D00_Afcgg5uesMarHZ0pFYJ0OADBfGuTA1siPaorbWkVSl2GLw%26oe%3D68F358B7&meta=Diesel%20%E2%80%A2%20Auto'">
           <img src="https://scontent.fhre1-2.fna.fbcdn.net/v/t51.82787-15/547779259_17977472714868042_61153380126499210_n.webp?stp=dst-jpg_s600x600_tt6&_nc_cat=104&ccb=1-7&_nc_sid=127cfc&_nc_ohc=exCO1MRgczwQ7kNvwG4RBl0&_nc_oc=AdmzK0svMs8S8kQXhU0RdME5FAb2LHZt8YTPAT_qw3hwcFW4WiIXV67VVrc8kh5e16Y&_nc_zt=23&_nc_ht=scontent.fhre1-2.fna&_nc_gid=K0vdmsRIyhDhyd-LWHqjiA&oh=00_Afcgg5uesMarHZ0pFYJ0OADBfGuTA1siPaorbWkVSl2GLw&oe=68F358B7" alt="Mercedes Benz GLC 220d luxury SUV" loading="lazy">
           <h3>Mercedes Benz GLC 220d</h3>
@@ -192,10 +181,10 @@
         </article>
 
         
-        </div>
+      </div>
 
       <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
-        <a class="btn btn-primary" href="#contact">Book a Test Drive</a>
+        <a class="btn btn-primary" href="#contact">Book a Meeting</a>
         <a class="btn btn-ghost" href="all-cars.html">See All Cars</a>
       </div>
     </section>
@@ -315,23 +304,33 @@
         <aside class="contact-card reveal" id="contact">
           <h3>Contact Us</h3>
           <p class="muted">Drop your details — we’ll get back within one business day.</p>
-          <form onsubmit="return handleContact(event)">
+          <form onsubmit="return handleContact(event)" class="contact-form">
             <div class="form-row"><input placeholder="Full name" required id="name" autocomplete="name"/></div>
             <div class="form-row"><input placeholder="Phone or email" required id="contactinfo" autocomplete="tel"/></div>
-            <div style="margin-top:10px"><textarea placeholder="Interested in..." id="message"></textarea></div>
-            <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+            <div class="form-row"><textarea placeholder="Interested in..." id="message"></textarea></div>
+            <div class="form-actions">
               <button class="btn btn-primary" type="submit">Send</button>
               <button class="btn btn-ghost" type="button" onclick="openWhatsApp()">WhatsApp</button>
             </div>
           </form>
-          <div style="margin-top:10px;font-size:13px" class="muted">Or call <a href="tel:+263717313810" style="color:var(--blue);text-decoration:none;font-weight:700">+263 71 731 3810</a> • <a href="https://wa.me/263717313810?text=Hi%20Wirom%2C%20I%27m%20interested%20in%20a%20car." target="_blank" rel="noopener" style="color:var(--yellow);text-decoration:none;font-weight:800">WhatsApp us</a> • <a href="mailto:sales@wirom.co.zw" style="color:var(--yellow);text-decoration:none;font-weight:800">Email</a></div>
-          <div style="margin-top:8px;font-size:13px;display:flex;align-items:center;gap:8px" class="muted">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="color:var(--yellow)">
-              <path d="M22.675 0H1.325C.593 0 0 .593 0 1.326v21.348C0 23.407.593 24 1.325 24h11.494V14.706H9.691v-3.62h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.794.143v3.24l-1.918.001c-1.504 0-1.796.716-1.796 1.767v2.317h3.59l-.467 3.62h-3.123V24h6.116C23.407 24 24 23.407 24 22.674V1.326C24 .593 23.407 0 22.675 0z"/>
-            </svg>
-            <span>Facebook:</span>
-            <a href="https://www.facebook.com/share/177dLZ1N8M/?mibextid=wwXIfr" target="_blank" rel="noopener" style="color:var(--yellow);text-decoration:none;font-weight:800">wirom beitbrdge carsales</a>
-          </div>
+          <ul class="contact-list">
+            <li>
+              <span class="ci ci-phone" aria-hidden="true"></span>
+              <a href="tel:+263717313810">+263 71 731 3810</a>
+            </li>
+            <li>
+              <span class="ci ci-wa" aria-hidden="true"></span>
+              <a href="https://wa.me/263717313810?text=Hi%20Wirom%2C%20I%27m%20interested%20in%20a%20car." target="_blank" rel="noopener">WhatsApp Chat</a>
+            </li>
+            <li>
+              <span class="ci ci-mail" aria-hidden="true"></span>
+              <a href="mailto:sales@wirom.co.zw">sales@wirom.co.zw</a>
+            </li>
+            <li>
+              <span class="ci ci-fb" aria-hidden="true"></span>
+              <a href="https://www.facebook.com/share/177dLZ1N8M/?mibextid=wwXIfr" target="_blank" rel="noopener">wirom beitbrdge carsales</a>
+            </li>
+          </ul>
         </aside>
       </div>
     </section>
@@ -509,41 +508,65 @@
     </div>
   </section>
 
-  <footer class="footer-light">
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;align-items:start">
-      <div style="display:flex;gap:12px;align-items:center">
-        <img src="images/wirom.jpg" alt="Wirom" class="logo-img" style="height:72px;width:auto" />
+  <footer class="footer-classic">
+    <div class="footer-wrap">
+      <div class="footer-top">
+        <div class="f-col about">
+          <div class="brand-row">
+            <img src="images/wirom.jpg" alt="Wirom" class="footer-logo" />
         <div>
-          <strong>Wirom Beitbridge Carsales</strong>
-          <div class="muted" style="font-size:13px">Quality used cars • Trusted service</div>
+              <div class="brand-name">Wirom Beitbridge Carsales</div>
+              <div class="brand-tag">Quality used cars • Trusted service</div>
+            </div>
+          </div>
+          <div class="about-title">Contact</div>
+          <div class="contact-block">
+            <div class="contact-row"><span class="icon">📞</span> <a href="tel:+263717313810">+263 71 731 3810</a></div>
+            <div class="contact-row"><span class="icon">✉️</span> <a href="mailto:sales@wirom.co.zw">sales@wirom.co.zw</a></div>
+            <div class="contact-row"><span class="icon">📍</span> Beitbridge, Zimbabwe</div>
+          </div>
+        </div>
+        <div class="f-col links">
+          <div class="col-title">Information</div>
+          <ul class="col-list">
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#">More Search</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Testimonials</a></li>
+            <li><a href="#">Events</a></li>
+          </ul>
+        </div>
+        <div class="f-col links">
+          <div class="col-title">Helpful Links</div>
+          <ul class="col-list">
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Supports</a></li>
+            <li><a href="#">Terms &amp; Condition</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+          </ul>
+        </div>
+        <div class="f-col subscribe">
+          <div class="col-title">Subscribe More Info</div>
+          <label for="footerEmail" class="sr-only">Enter your Email</label>
+          <div class="subscribe-row">
+            <input id="footerEmail" type="email" placeholder="Enter your Email" />
+            <button class="btn-subscribe">Subscribe</button>
+          </div>
         </div>
       </div>
-      <div class="muted">
-        <div><strong>Contact</strong></div>
-        <div><a href="tel:+263717313810" style="color:inherit;text-decoration:none">+263 71 731 3810</a></div>
-        <div><a href="https://wa.me/263717313810" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">WhatsApp</a></div>
-        <div><a href="mailto:sales@wirom.co.zw" style="color:inherit;text-decoration:none">sales@wirom.co.zw</a></div>
-        <div>Beitbridge, Zimbabwe</div>
+
+      <div class="footer-divider"></div>
+
+      <div class="footer-mid">
+        <div class="socials">
+          <a href="https://www.facebook.com/share/177dLZ1N8M/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook" class="s s-fb">f</a>
+        </div>
       </div>
-      <div class="muted">
-        <div><strong>Follow Us</strong></div>
-        <div style="display:flex;gap:12px;align-items:center;margin-top:8px">
-          <a href="https://www.facebook.com/share/177dLZ1N8M/?mibextid=wwXIfr" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;display:flex;align-items:center;gap:6px">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M22.675 0H1.325C.593 0 0 .593 0 1.326v21.348C0 23.407.593 24 1.325 24h11.494V14.706H9.691v-3.62h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.794.143v3.24l-1.918.001c-1.504 0-1.796.716-1.796 1.767v2.317h3.59l-.467 3.62h-3.123V24h6.116C23.407 24 24 23.407 24 22.674V1.326C24 .593 23.407 0 22.675 0z"/>
-            </svg>
-            Facebook
-          </a>
-        </div>
-        <div style="margin-top:8px">
-        <div><strong>Quick Links</strong></div>
-        <div><a href="#inventory" style="color:inherit;text-decoration:none">Browse Cars</a></div>
-        <div><a href="#about" style="color:inherit;text-decoration:none">About</a></div>
-        <div><a href="#contact" style="color:inherit;text-decoration:none">Contact</a></div>
-        </div>
+
+      <div class="footer-bottom-row">
+        <div class="copy">© <span id="year"></span> Wirom Car Sales • All rights reserved</div>
       </div>
     </div>
-    <div class="muted" style="margin-top:12px">© <span id="year"></span> Wirom Car Sales • All rights reserved</div>
   </footer>
 
   <button class="fab" id="importFab" aria-label="Buy now" title="Buy now">Buy now</button>
@@ -579,6 +602,7 @@
       <div class="contact-body">
         <div class="contact-row">Phone: <a href="tel:+263717313810">+263 71 731 3810</a></div>
         <div class="contact-row">WhatsApp: <a href="https://wa.me/263717313810?text=Hi%20Wirom%2C%20I%27m%20interested%20in%20a%20car." target="_blank" rel="noopener">Chat now</a></div>
+  <div class="contact-row">Email: <a href="mailto:sales@wirom.co.zw" style="display:inline-flex;align-items:center;gap:8px"><svg class="email-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg><span>sales@wirom.co.zw</span></a></div>
         <div class="contact-row">Facebook: <a href="https://www.facebook.com/share/177dLZ1N8M/?mibextid=wwXIfr" target="_blank" rel="noopener">wirom beitbrdge carsales</a></div>
         <div class="contact-actions">
           <button class="btn-outline" onclick="openWhatsApp()">Open WhatsApp</button>

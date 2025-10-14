@@ -93,6 +93,12 @@ nav a:hover{opacity:.9}
 .header-actions{display:flex;gap:10px;align-items:center}
 .btn-mini{height:36px;padding:0 12px;border-radius:999px;font-weight:800;font-size:13px}
 .theme-toggle{background:#ffffff;border:1px solid rgba(10,20,40,0.12);color:#0b1e34;border-radius:999px;padding:0 12px;cursor:pointer}
+/* Switch styling for theme toggle */
+.theme-toggle{position:relative;width:52px;height:28px;padding:0;border-radius:999px;border:1px solid rgba(10,20,40,0.18);background:rgba(255,255,255,0.9);font-size:0;line-height:0}
+.theme-toggle::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--yellow);box-shadow:0 2px 6px rgba(0,0,0,.15);transition:transform .2s ease}
+:root:not([data-theme]),:root[data-theme="dark"]{color-scheme:dark}
+:root[data-theme="light"] .theme-toggle{background:#ffffff}
+:root[data-theme="light"] .theme-toggle::after{transform:translateX(24px)}
 @media (prefers-color-scheme: light){
   :root:not([data-theme]){ color-scheme: light; }
 }
@@ -102,6 +108,17 @@ nav a:hover{opacity:.9}
 .nav-toggle svg{width:22px;height:22px}
 .nav-panel{display:none;position:fixed;top:64px;left:0;right:0;padding:12px 20px 20px;background:linear-gradient(180deg,rgba(15,18,49,0.98),rgba(15,18,49,0.9));border-bottom:1px solid rgba(255,255,255,0.08);z-index:100}
 .nav-panel a{display:block;padding:14px;border-radius:10px;color:#e6e9ff;text-decoration:none;font-weight:800}
+
+/* Accessible hidden text */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* Icon-only button variant (header) */
+/* Icon-only header button: transparent background, no shadow, compact sizing */
+.icon-btn{background:transparent !important;padding:6px;min-width:auto;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;transition:transform .14s ease,background .14s ease;box-shadow:none;border:0}
+.icon-btn:hover{transform:scale(0.92)}
+
+/* WhatsApp icon sizing inside header buttons */
+.wa-icon{width:28px;height:28px;display:inline-block;vertical-align:middle}
 
 /* Switch to mobile nav earlier to avoid link overlap on mid-width phones */
 @media (max-width:900px){
@@ -434,6 +451,19 @@ details[open]{background:linear-gradient(180deg,rgba(255,255,255,0.12),rgba(255,
 /* ====== About & Contact ====== */
 .about-grid{display:grid;grid-template-columns:1fr 360px;gap:26px;align-items:start}
 .contact-card{background:#ffffff;padding:18px;border-radius:12px;box-shadow:var(--card-shadow);color:#06233f;margin-top:-8px}
+.contact-form .form-row{margin-top:10px}
+.contact-form textarea{min-height:110px}
+.contact-form .form-actions{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
+
+/* Contact list with icons */
+.contact-list{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:10px}
+.contact-list li{display:flex;align-items:center;gap:10px}
+.contact-list a{text-decoration:none;color:var(--blue);font-weight:800}
+.ci{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:999px;background:var(--navy);color:var(--yellow);font-weight:900}
+.ci-phone::before{content:"☎"}
+.ci-wa::before{content:"W"}
+.ci-mail::before{content:"✉"}
+.ci-fb::before{content:"f"}
 .about-grid .card{background:linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.06));color:#e6e9ff;border:1px solid rgba(255,255,255,0.10);box-shadow:var(--card-shadow);display:flex;gap:8px;min-height:120px}
 .about-grid .card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(6,20,40,0.14);border-color:rgba(255,255,255,0.16)}
 .about-grid .card h3{margin:0 0 6px;color:#fff;font-weight:900;letter-spacing:.2px}
@@ -444,10 +474,69 @@ input,textarea{width:100%;padding:12px;border-radius:8px;border:1px solid rgba(1
 textarea{min-height:110px}
 
 /* ====== Footer ====== */
-footer{padding:28px 6vw;background:linear-gradient(0deg,rgba(255,255,255,0.04),transparent);color:#c6cbe6}
-footer .grid{grid-template-columns:repeat(3,1fr)}
+/* Custom site footer (dark variant) */
+.site-footer{background:#070507;color:#d1cfcf;padding:36px 6vw;border-top:1px solid rgba(255,255,255,0.04)}
+.site-footer .footer-inner{max-width:1200px;margin:0 auto}
+.site-footer .footer-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;align-items:start}
+.site-footer .footer-logo{height:64px;border-radius:6px}
+.site-footer .footer-desc{margin:10px 0 14px;color:#c9c5c5}
+.footer-contact-list{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.footer-contact-list li{display:flex;gap:8px;align-items:center;color:#c9c5c5}
+.footer-contact-list li a{color:inherit;text-decoration:none;font-weight:700}
+.site-footer h4{color:#f4a62a;margin:0 0 10px}
+.site-footer .footer-links ul,.site-footer .footer-help ul{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.site-footer .footer-links a{color:#d1cfcf;text-decoration:none}
+.footer-subscribe{margin-top:12px}
+.subscribe-row{display:flex;gap:8px}
+.subscribe-row input{flex:1;padding:10px 12px;border-radius:6px;border:0}
+.btn-subscribe{background:#f4a62a;color:#0f1231;border:0;padding:8px 12px;border-radius:6px;cursor:pointer}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:22px;border-top:1px solid rgba(255,255,255,0.03);padding-top:16px}
+.footer-socials{display:flex;gap:12px;align-items:center}
+.social{display:inline-flex;width:34px;height:34px;border-radius:999px;background:#f4a62a;color:#0f1231;align-items:center;justify-content:center;text-decoration:none}
+.footer-copy{color:#bdb8b8}
+
+@media (max-width:900px){.site-footer .footer-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:640px){.site-footer .footer-grid{grid-template-columns:1fr}.footer-bottom{flex-direction:column;gap:12px;align-items:start}}
+
+/* keep older generic footer rules for light variant */
+footer.footer-light{background:#ffffff;color:#06233f;border-top:1px solid #e7ecf3}
+footer.footer-light a{color:inherit}
 @media (max-width:900px){footer .grid{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:640px){footer .grid{grid-template-columns:1fr}}
+
+/* ====== Classic Footer (matches screenshot) ====== */
+.footer-classic{background:linear-gradient(180deg, var(--navy), var(--muted));color:var(--ink-2);padding:36px 6vw 16px;border-top:1px solid rgba(255,255,255,0.08)}
+.footer-classic .footer-wrap{max-width:1200px;margin:0 auto}
+.footer-classic .footer-top{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:32px;align-items:start}
+.footer-classic .footer-logo{height:44px;width:auto;border-radius:8px;display:block}
+.footer-classic .brand-row{display:flex;align-items:center;gap:12px}
+.footer-classic .brand-name{font-weight:900;color:var(--heading)}
+.footer-classic .brand-tag{font-size:12px;color:var(--ink-2)}
+.footer-classic .about-title{margin-top:12px;color:var(--yellow);font-weight:800}
+.footer-classic .about-text{color:var(--ink-2);margin:8px 0 0}
+.footer-classic .contact-block{margin-top:12px;display:grid;gap:8px}
+.footer-classic .contact-row{display:flex;gap:8px;align-items:center;color:var(--ink-2)}
+.footer-classic .contact-row a{color:inherit;text-decoration:none}
+.footer-classic .col-title{color:var(--yellow);margin:0 0 10px;font-weight:800}
+.footer-classic .col-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.footer-classic .col-list a{color:#d9d6d6;text-decoration:none}
+.footer-classic .subscribe .subscribe-row{display:flex;gap:10px}
+.footer-classic .subscribe input{flex:1;padding:10px 12px;border-radius:6px;border:0}
+.footer-classic .btn-subscribe{background:#f4a62a;color:#000;border:0;padding:8px 12px;border-radius:6px;cursor:pointer}
+.footer-classic .footer-divider{height:1px;background:rgba(255,255,255,0.08);margin:16px 0}
+.footer-classic .footer-mid{display:flex;justify-content:center}
+.footer-classic .socials{display:flex;gap:10px}
+.footer-classic .s{width:28px;height:28px;border-radius:999px;background:var(--yellow);color:var(--navy);display:inline-flex;align-items:center;justify-content:center;text-decoration:none;font-weight:900}
+.footer-classic .footer-bottom-row{display:flex;justify-content:flex-end;margin-top:10px}
+.footer-classic .copy{color:var(--ink-2);font-size:12px}
+/* Light theme blend */
+:root[data-theme="light"] .footer-classic{background:#ffffff;color:#06233f;border-top:1px solid #e7ecf3}
+:root[data-theme="light"] .footer-classic .brand-name{color:var(--heading)}
+:root[data-theme="light"] .footer-classic .about-text{color:#3a5268}
+:root[data-theme="light"] .footer-classic .contact-row{color:#3a5268}
+:root[data-theme="light"] .footer-classic .footer-divider{background:#e7ecf3}
+@media (max-width:900px){.footer-classic .footer-top{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:640px){.footer-classic .footer-top{grid-template-columns:1fr}.footer-classic .footer-bottom-row{justify-content:flex-start}}
 
 /* Opening hours card */
 .hours-card{background:#ffffff !important;color:#06233f;border:1px solid #e7ecf3}
@@ -498,6 +587,18 @@ footer.footer-light a{color:inherit}
 @media (max-width:1100px){.grid{grid-template-columns:repeat(2,1fr)}.testimonials{grid-template-columns:repeat(2,1fr)}.highlights{grid-template-columns:repeat(2,1fr)}.about-grid{grid-template-columns:1fr}.hero__inner{flex-direction:column}.hero{padding-top:100px}}
 @media (max-width:640px){nav{display:none}header{padding:12px} .grid{grid-template-columns:1fr} .layout-with-sidebar{grid-template-columns:1fr} .car-card{max-width:100%} .testimonials{grid-template-columns:1fr} .highlights{grid-template-columns:1fr} .nav-toggle{display:flex} .nav-panel{display:block;transform:translateY(-12px);opacity:0;pointer-events:none;transition:opacity .2s, transform .2s;}
   .nav-panel.visible{opacity:1;transform:translateY(0);pointer-events:auto}
+  /* Hide header Call button on mobile */
+  .header-actions a[href^="tel:"]{display:none}
+  /* Mobile hero layout tweaks */
+  .hero__inner{gap:16px}
+  .hero__copy{text-align:left}
+  .hero-cta{display:grid;grid-template-columns:1fr;gap:8px}
+  .hero-cta .btn{width:100%;justify-content:center}
+  .hero__visual{width:100%}
+  .car-card{margin:0 auto;max-width:100%}
+  .car-card img{width:100%;height:46vh;max-height:360px;object-fit:cover;border-radius:10px}
+  /* Hide thumbnail strip on mobile to show a single full-width image */
+  .hero-thumbs{display:none}
 }
 
 /* Extra small devices */

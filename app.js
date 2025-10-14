@@ -50,7 +50,6 @@ if(!prefersReduced && parallaxCard && heroEl){
 
 // Hero thumbnail switching
 const heroImage = document.getElementById('heroImage');
-const heroThumbs = Array.from(document.querySelectorAll('.hero-thumb'));
 // Fallback car images pool
 const fallbackCars = [
   'https://images.unsplash.com/photo-1502877338535-766e1452684a?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3',
@@ -92,7 +91,9 @@ const imgObserver = new MutationObserver((mutations)=>{
   })
 });
 imgObserver.observe(document.documentElement, { childList:true, subtree:true });
-heroThumbs.forEach(btn=>{
+function wireHeroThumbs(){
+  const thumbs = Array.from(document.querySelectorAll('.hero-thumb'));
+  thumbs.forEach(btn=>{
   btn.addEventListener('click', ()=>{
     const nextSrc = btn.getAttribute('data-src');
     if(!nextSrc || !heroImage) return;
@@ -108,12 +109,75 @@ heroThumbs.forEach(btn=>{
       heroImage.style.opacity = '1';
     };
     tmp.src = nextSrc;
-    heroThumbs.forEach(b=> b.classList.remove('is-active'));
+      thumbs.forEach(b=> b.classList.remove('is-active'));
     btn.classList.add('is-active');
-    heroThumbs.forEach(b=> b.setAttribute('aria-selected','false'));
+      thumbs.forEach(b=> b.setAttribute('aria-selected','false'));
     btn.setAttribute('aria-selected','true');
+      // Also update textual labels if present
+      const nm = document.getElementById('heroCarName');
+      const pr = document.getElementById('heroCarPrice');
+      if(nm) nm.textContent = btn.dataset.name || '';
+      if(pr) pr.textContent = btn.dataset.price ? `$${Number(btn.dataset.price).toLocaleString()}` : '';
+    });
   });
-});
+}
+
+// Build hero thumbnails from current inventory cards
+function buildHeroFromInventory(maxThumbs = 6){
+  const grid = document.getElementById('inventoryGrid');
+  const container = document.querySelector('.hero-thumbs');
+  if(!grid || !container) return;
+  const cards = Array.from(grid.querySelectorAll('.card'));
+  container.innerHTML = '';
+  let first = null;
+  cards.slice(0, maxThumbs).forEach((card, idx)=>{
+    const img = card.querySelector('img');
+    const name = card.querySelector('h3')?.textContent?.trim() || '';
+    const priceText = (card.querySelector('.price')?.textContent || '').replace(/[$,\s]/g,'');
+    const price = parseInt(priceText||'0',10);
+    if(!img || !img.src) return;
+    const thumb = document.createElement('div');
+    thumb.className = 'hero-thumb' + (idx===0 ? ' is-active' : '');
+    thumb.setAttribute('data-src', img.src);
+    thumb.setAttribute('data-name', name);
+    thumb.setAttribute('data-price', String(price));
+    thumb.innerHTML = `<img src="${img.src}" alt="${name} thumb">`;
+    container.appendChild(thumb);
+    if(idx===0){
+      first = { src: img.src, name, price };
+    }
+  });
+  // Set hero to first card
+  if(first && heroImage){
+    heroImage.src = first.src;
+    const nm = document.getElementById('heroCarName');
+    const pr = document.getElementById('heroCarPrice');
+    if(nm) nm.textContent = first.name;
+    if(pr) pr.textContent = `$${Number(first.price||0).toLocaleString()}`;
+  }
+  wireHeroThumbs();
+  // Start/refresh mobile carousel when thumbnails are (re)built
+  setupMobileHeroCarousel();
+}
+
+// Mobile-only hero carousel (auto-advance every 4 seconds)
+let heroCarouselTimer = null;
+function setupMobileHeroCarousel(){
+  const mq = window.matchMedia('(max-width: 640px)');
+  // clear any existing timer
+  if(heroCarouselTimer){ clearInterval(heroCarouselTimer); heroCarouselTimer = null; }
+  if(!mq.matches) return; // only enable on mobile
+  const thumbs = Array.from(document.querySelectorAll('.hero-thumb'));
+  if(thumbs.length === 0) return;
+  // derive current index based on active class
+  let idx = Math.max(0, thumbs.findIndex(t=> t.classList.contains('is-active')));
+  heroCarouselTimer = setInterval(()=>{
+    idx = (idx + 1) % thumbs.length;
+    thumbs[idx].click();
+  }, 4000);
+  // If user taps a thumb, update the index so rotation continues from there
+  thumbs.forEach((t, i)=> t.addEventListener('click', ()=>{ idx = i; }));
+}
 
 // Contact form simple handler (demo)
 function handleContact(e){
@@ -447,6 +511,8 @@ themeToggle.addEventListener('click', ()=>{
       console.log('Firebase is available, loading cars...');
       clearInterval(checkFirebase);
       loadCarsFromFirebase();
+      // Build initial hero from current DOM (before Firebase finishes) to ensure correct layout
+      buildHeroFromInventory();
     } else {
       console.log('Waiting for Firebase...');
     }
@@ -488,6 +554,8 @@ themeToggle.addEventListener('click', ()=>{
     });
     
     console.log('Finished loading cars from Firebase');
+    // Rebuild hero thumbnails from latest inventory (now includes Firebase cars)
+    buildHeroFromInventory();
   } catch (error) {
     console.error('Error loading cars:', error);
     console.error('Error details:', error.message);
