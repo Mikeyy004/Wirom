@@ -61,6 +61,8 @@
   border:1px solid #e7ecf3;
   color:#0b1e34;
 }
+:root[data-theme="light"] .step-title{color:#0b1e34}
+:root[data-theme="light"] .step-text{color:#3a5268}
 :root[data-theme="light"] .highlight strong{color:#6a5300}
 :root[data-theme="light"] .quote{background:#ffffff;border:1px solid #e7ecf3;color:#0b1e34}
 :root[data-theme="light"] .name{color:#0b1e34}
