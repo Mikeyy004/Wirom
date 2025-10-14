@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>All Cars • Wirom</title>
+  <link rel="stylesheet" href="styles.css" />
+  <meta name="theme-color" content="#0F1231" />
+</head>
+<body>
+  <header>
+    <button class="nav-toggle" onclick="history.back()" aria-label="Go back">←</button>
+    <div class="logo"><img src="images/wirom.jpg" alt="Wirom" class="logo-img" /></div>
+    <nav aria-label="Primary">
+      <a href="index.html#inventory">Inventory</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#contact" id="contactOpen">Contact</a>
+    </nav>
+  </header>
+
+  <main class="section" style="padding-top:100px">
+    <h2>All Cars</h2>
+    <p class="muted">Browse the full list. Click any car to view details.</p>
+    <div class="grid" id="allCarsGrid">
+      <!-- Cars with Facebook Images Only -->
+      <a class="card" href="car.html?name=Toyota%20Passo%202016&price=4500&img=https%3A%2F%2Fscontent.fhre1-2.fna.fbcdn.net%2Fv%2Ft39.30808-6%2F561726507_1216526417178779_3779744219711410456_n.jpg%3Fstp%3Ddst-jpg_s600x600_tt6%26_nc_cat%3D103%26ccb%3D1-7%26_nc_sid%3D127cfc%26_nc_ohc%3DjRh8rjm2nJwQ7kNvwGOE4YG%26_nc_oc%3DAdmvNV0lFseXsD8zqbicwNeLqOVPL5iDGRupIPgyw0leNgBpyh7NP1u2HZ6Wix0mF4I%26_nc_zt%3D23%26_nc_ht%3Dscontent.fhre1-2.fna%26_nc_gid%3DPCJCBxKomcBJkWOuxkgXHQ%26oh%3D00_Aff8zwy2200lU7dX3v7sdi6aF3OdYA-Th22TtkkR6dj8Sw%26oe%3D68F3741F&meta=89%2C000%20km%20%E2%80%A2%20Petrol%20%E2%80%A2%20Auto">
+        <img src="https://scontent.fhre1-2.fna.fbcdn.net/v/t39.30808-6/561726507_1216526417178779_3779744219711410456_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=103&ccb=1-7&_nc_sid=127cfc&_nc_ohc=jRh8rjm2nJwQ7kNvwGOE4YG&_nc_oc=AdmvNV0lFseXsD8zqbicwNeLqOVPL5iDGRupIPgyw0leNgBpyh7NP1u2HZ6Wix0mF4I&_nc_zt=23&_nc_ht=scontent.fhre1-2.fna&_nc_gid=PCJCBxKomcBJkWOuxkgXHQ&oh=00_Aff8zwy2200lU7dX3v7sdi6aF3OdYA-Th22TtkkR6dj8Sw&oe=68F3741F" alt="Toyota Passo 2016" loading="lazy" />
+        <h3>2016 Toyota Passo</h3>
+        <div class="meta"><span>89,000 km • Petrol • Auto</span><strong>$4,500</strong></div>
+      </a>
+      <a class="card" href="car.html?name=Toyota%20Probox%20Diesel&price=5500&img=https%3A%2F%2Fscontent.fhre1-2.fna.fbcdn.net%2Fv%2Ft39.30808-6%2F561067364_1215629283935159_5761146081770315269_n.jpg%3Fstp%3Ddst-jpg_s600x600_tt6%26_nc_cat%3D110%26ccb%3D1-7%26_nc_sid%3D127cfc%26_nc_ohc%3DylFza_mGYEQQ7kNvwE2lGFY%26_nc_oc%3DAdnHeWCJucbOPWLtMuB0tetwV2OCQpJOt7q-cnbBWdR44sudslSbgskIepimiWYMDfo%26_nc_zt%3D23%26_nc_ht%3Dscontent.fhre1-2.fna%26_nc_gid%3D9fWbDqKA9n5_EmsU9kYzew%26oh%3D00_Aff9ufBIc31XZxlcom-C8ar0iC47yVCxvLNphxDCEGO0Qg%26oe%3D68F37F83&meta=Diesel">
+        <img src="https://scontent.fhre1-2.fna.fbcdn.net/v/t39.30808-6/561067364_1215629283935159_5761146081770315269_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=110&ccb=1-7&_nc_sid=127cfc&_nc_ohc=ylFza_mGYEQQ7kNvwE2lGFY&_nc_oc=AdnHeWCJucbOPWLtMuB0tetwV2OCQpJOt7q-cnbBWdR44sudslSbgskIepimiWYMDfo&_nc_zt=23&_nc_ht=scontent.fhre1-2.fna&_nc_gid=9fWbDqKA9n5_EmsU9kYzew&oh=00_Aff9ufBIc31XZxlcom-C8ar0iC47yVCxvLNphxDCEGO0Qg&oe=68F37F83" alt="Toyota Probox Diesel" loading="lazy" />
+        <h3>Toyota Probox Diesel</h3>
+        <div class="meta"><span>Diesel</span><strong>$5,500</strong></div>
+      </a>
+      <a class="card" href="car.html?name=Toyota%20Sienta%202016&price=6500&img=https%3A%2F%2Fscontent.fhre1-1.fna.fbcdn.net%2Fv%2Ft39.30808-6%2F559718450_1212807200884034_6068470942309837240_n.jpg%3Fstp%3Ddst-jpg_s600x600_tt6%26_nc_cat%3D106%26ccb%3D1-7%26_nc_sid%3D127cfc%26_nc_ohc%3DrwlaJeJlgZQQ7kNvwGoUQ57%26_nc_oc%3DAdnqhDjXYi4MwPe7LpB7lG514GSYK3_Q1_kA6Xkibse1QBcRZqb59eSrGbg7nEq5-7I%26_nc_zt%3D23%26_nc_ht%3Dscontent.fhre1-1.fna%26_nc_gid%3D9fWbDqKA9n5_EmsU9kYzew%26oh%3D00_Afe6oFvhDKKygMNQtL1U8HX4vF7WlCL4mAImKj2bd8cuoQ%26oe%3D68F38112&meta=Petrol%20%E2%80%A2%20Auto">
+        <img src="https://scontent.fhre1-1.fna.fbcdn.net/v/t39.30808-6/559718450_1212807200884034_6068470942309837240_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_ohc=rwlaJeJlgZQQ7kNvwGoUQ57&_nc_oc=AdnqhDjXYi4MwPe7LpB7lG514GSYK3_Q1_kA6Xkibse1QBcRZqb59eSrGbg7nEq5-7I&_nc_zt=23&_nc_ht=scontent.fhre1-1.fna&_nc_gid=9fWbDqKA9n5_EmsU9kYzew&oh=00_Afe6oFvhDKKygMNQtL1U8HX4vF7WlCL4mAImKj2bd8cuoQ&oe=68F38112" alt="Toyota Sienta 2016" loading="lazy" />
+        <h3>2016 Toyota Sienta</h3>
+        <div class="meta"><span>Petrol • Auto</span><strong>$6,500</strong></div>
+      </a>
+      <a class="card" href="car.html?name=BMW%20X1%202017&price=9500&img=https%3A%2F%2Fscontent.fhre1-2.fna.fbcdn.net%2Fv%2Ft51.82787-15%2F561167624_17980479323868042_7753240109467543809_n.webp%3Fstp%3Ddst-jpg_s600x600_tt6%26_nc_cat%3D109%26ccb%3D1-7%26_nc_sid%3D127cfc%26_nc_ohc%3DxTAhWV3QkG4Q7kNvwFEDsiY%26_nc_oc%3DAdmRMZuu2siaymb-CgITAq4H8LHElEfrY3-FavRYSeL3HZpdyLob5j6k7XQ1_EavHP4%26_nc_zt%3D23%26_nc_ht%3Dscontent.fhre1-2.fna%26_nc_gid%3D9fWbDqKA9n5_EmsU9kYzew%26oh%3D00_Afc1pG8F_wA2BZl_vzUgASZpLec5MZRBTa4BlLUI0_Q3ng%26oe%3D68F360BC&meta=Petrol%20%E2%80%A2%20Auto">
+        <img src="https://scontent.fhre1-2.fna.fbcdn.net/v/t51.82787-15/561167624_17980479323868042_7753240109467543809_n.webp?stp=dst-jpg_s600x600_tt6&_nc_cat=109&ccb=1-7&_nc_sid=127cfc&_nc_ohc=xTAhWV3QkG4Q7kNvwFEDsiY&_nc_oc=AdmRMZuu2siaymb-CgITAq4H8LHElEfrY3-FavRYSeL3HZpdyLob5j6k7XQ1_EavHP4&_nc_zt=23&_nc_ht=scontent.fhre1-2.fna&_nc_gid=9fWbDqKA9n5_EmsU9kYzew&oh=00_Afc1pG8F_wA2BZl_vzUgASZpLec5MZRBTa4BlLUI0_Q3ng&oe=68F360BC" alt="BMW X1 2017" loading="lazy" />
+        <h3>2017 BMW X1</h3>
+        <div class="meta"><span>Petrol • Auto</span><strong>$9,500</strong></div>
+      </a>
+      <a class="card" href="car.html?name=BMW%201%20Series&price=6000&img=https%3A%2F%2Fscontent.fhre1-1.fna.fbcdn.net%2Fv%2Ft51.82787-15%2F559981604_17980280630868042_3725572623606102803_n.webp%3Fstp%3Ddst-jpg_s600x600_tt6%26_nc_cat%3D107%26ccb%3D1-7%26_nc_sid%3D127cfc%26_nc_ohc%3DbC--sb40d0wQ7kNvwEXVpZB%26_nc_oc%3DAdmsMU9aa4bNX3jUQmDc1yjIiMMAEPBlEpoUXfFdCZKH4lmO-6jLM7eAVkmm8ZFi9hg%26_nc_zt%3D23%26_nc_ht%3Dscontent.fhre1-1.fna%26_nc_gid%3DIulsciHTnas2yM331nRJMg%26oh%3D00_Afe4sSOQucrPWDWOu7-oGdBRTBvfePPbSWfMdn8mhKOZ3g%26oe%3D68F387D1&meta=Petrol%20%E2%80%A2%20Auto">
+        <img src="https://scontent.fhre1-1.fna.fbcdn.net/v/t51.82787-15/559981604_17980280630868042_3725572623606102803_n.webp?stp=dst-jpg_s600x600_tt6&_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=bC--sb40d0wQ7kNvwEXVpZB&_nc_oc=AdmsMU9aa4bNX3jUQmDc1yjIiMMAEPBlEpoUXfFdCZKH4lmO-6jLM7eAVkmm8ZFi9hg&_nc_zt=23&_nc_ht=scontent.fhre1-1.fna&_nc_gid=IulsciHTnas2yM331nRJMg&oh=00_Afe4sSOQucrPWDWOu7-oGdBRTBvfePPbSWfMdn8mhKOZ3g&oe=68F387D1" alt="BMW 1 Series" loading="lazy" />
+        <h3>BMW 1 Series</h3>
+        <div class="meta"><span>Petrol • Auto</span><strong>$6,000</strong></div>
+      </a>
+      <a class="card" href="car.html?name=Toyota%20Corolla%20Cross%202021&price=21000&img=https%3A%2F%2Fscontent.fhre1-1.fna.fbcdn.net%2Fv%2Ft39.30808-6%2F557315085_1205580638273357_5682791355014002946_n.jpg%3Fstp%3Ddst-jpg_s600x600_tt6%26_nc_cat%3D106%26ccb%3D1-7%26_nc_sid%3D833d8c%26_nc_ohc%3D1HX1WYzDA1oQ7kNvwEbnguK%26_nc_oc%3DAdm5-RSoAYH_YhwwvRkGx3Qxl67B2lPTFxOldb93FrDMN85aIkSto1boKVS56N5N8_A%26_nc_zt%3D23%26_nc_ht%3Dscontent.fhre1-1.fna%26_nc_gid%3DIulsciHTnas2yM331nRJMg%26oh%3D00_AfcPqnn5fyLhwrn1yqY-O_Usl7W2wobrr71mCw7sCZnUBA%26oe%3D68F370F2&meta=Petrol%20%E2%80%A2%20Auto">
+        <img src="https://scontent.fhre1-1.fna.fbcdn.net/v/t39.30808-6/557315085_1205580638273357_5682791355014002946_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=1HX1WYzDA1oQ7kNvwEbnguK&_nc_oc=Adm5-RSoAYH_YhwwvRkGx3Qxl67B2lPTFxOldb93FrDMN85aIkSto1boKVS56N5N8_A&_nc_zt=23&_nc_ht=scontent.fhre1-1.fna&_nc_gid=IulsciHTnas2yM331nRJMg&oh=00_AfcPqnn5fyLhwrn1yqY-O_Usl7W2wobrr71mCw7sCZnUBA&oe=68F370F2" alt="Toyota Corolla Cross 2021" loading="lazy" />
+        <h3>2021 Toyota Corolla Cross</h3>
+        <div class="meta"><span>Petrol • Auto</span><strong>$21,000</strong></div>
+      </a>
+      <a class="card" href="car.html?name=Mercedes%20Benz%20GLC%20220d&price=17000&img=https%3A%2F%2Fscontent.fhre1-2.fna.fbcdn.net%2Fv%2Ft51.82787-15%2F547779259_17977472714868042_61153380126499210_n.webp%3Fstp%3Ddst-jpg_s600x600_tt6%26_nc_cat%3D104%26ccb%3D1-7%26_nc_sid%3D127cfc%26_nc_ohc%3DexCO1MRgczwQ7kNvwG4RBl0%26_nc_oc%3DAdmzK0svMs8S8kQXhU0RdME5FAb2LHZt8YTPAT_qw3hwcFW4WiIXV67VVrc8kh5e16Y%26_nc_zt%3D23%26_nc_ht%3Dscontent.fhre1-2.fna%26_nc_gid%3DK0vdmsRIyhDhyd-LWHqjiA%26oh%3D00_Afcgg5uesMarHZ0pFYJ0OADBfGuTA1siPaorbWkVSl2GLw%26oe%3D68F358B7&meta=Diesel%20%E2%80%A2%20Auto">
+        <img src="https://scontent.fhre1-2.fna.fbcdn.net/v/t51.82787-15/547779259_17977472714868042_61153380126499210_n.webp?stp=dst-jpg_s600x600_tt6&_nc_cat=104&ccb=1-7&_nc_sid=127cfc&_nc_ohc=exCO1MRgczwQ7kNvwG4RBl0&_nc_oc=AdmzK0svMs8S8kQXhU0RdME5FAb2LHZt8YTPAT_qw3hwcFW4WiIXV67VVrc8kh5e16Y&_nc_zt=23&_nc_ht=scontent.fhre1-2.fna&_nc_gid=K0vdmsRIyhDhyd-LWHqjiA&oh=00_Afcgg5uesMarHZ0pFYJ0OADBfGuTA1siPaorbWkVSl2GLw&oe=68F358B7" alt="Mercedes Benz GLC 220d" loading="lazy" />
+        <h3>Mercedes Benz GLC 220d</h3>
+        <div class="meta"><span>Diesel • Auto</span><strong>$17,000</strong></div>
+      </a>
+    </div>
+  </main>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
+
+

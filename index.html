@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wirom Car Sales</title>
+  <meta name="description" content="Beitbridge Car Sales is a car marketing and Customs clearing consultancy established in April 2017. We link prospective buyers of ex‑Japanese cars with suppliers at Beitbridge and assist with Customs." />
+  <meta name="theme-color" content="#0057B8" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="images/wirom.jpg" type="image/jpeg" />
+  <link rel="apple-touch-icon" href="images/wirom.jpg" />
+  <meta property="og:image" content="images/wirom.jpg" />
+  <meta property="og:title" content="Wirom Car Sales" />
+  <meta property="og:description" content="Beitbridge Car Sales — car marketing and Customs clearing since 2017. We link buyers of ex‑Japanese cars with Beitbridge suppliers and assist with Customs." />
+  
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getFirestore, collection, addDoc, getDocs, onSnapshot, deleteDoc, doc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+    // Your Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAF0WirHCXED4eA9v0YYjB-0k3GmtDSddU",
+      authDomain: "wirom-carsale.firebaseapp.com",
+      projectId: "wirom-carsale",
+      storageBucket: "wirom-carsale.firebasestorage.app",
+      messagingSenderId: "641456590541",
+      appId: "1:641456590541:web:7d8b896c36b211c11ae384",
+      measurementId: "G-GVXR6PY22T"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+    const auth = getAuth(app);
+
+    // Make Firebase available globally
+    window.firebase = { db, storage, auth, collection, addDoc, getDocs, onSnapshot, deleteDoc, doc, ref, uploadBytes, getDownloadURL };
+  </script>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+
+  <header>
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-controls="mobileNav" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="logo">
+      <img src="images/wirom.jpg" alt="Wirom" class="logo-img" />
+    </div>
+    <nav aria-label="Primary">
+      <a href="#inventory">Browse Cars</a>
+      <a href="#about">About</a>
+      <a href="#contact" id="contactOpen">Contact</a>
+    </nav>
+    <div class="header-actions">
+      <button class="theme-toggle btn-mini" id="themeToggle" aria-pressed="false" title="Toggle theme">Light</button>
+      <a class="btn btn-primary btn-mini" href="https://wa.me/263717313810?text=Hi%20Wirom%2C%20I%27d%20like%20to%20buy%20a%20car" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn btn-ghost btn-mini" href="tel:+263717313810">Call</a>
+    </div>
+  </header>
+
+  <div class="nav-panel" id="mobileNav" hidden>
+    <a href="#inventory">Inventory</a>
+    <a href="#about">About</a>
+    <a href="#contact" id="contactOpenMobile">Contact</a>
+  </div>
+
+  <main>
+    <section class="hero">
+      <div class="hero__inner">
+        <div class="hero__copy">
+          <h1>Find Your Next Ride</h1>
+          <p class="lead">Import your dream car from Japan or South Africa with Wirom.</p>
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="#inventory">Browse Inventory</a>
+            <button class="btn btn-ghost" id="scrollToContact">Get in touch</button>
+          </div>
+          <div class="highlights">
+            <div class="highlight"><strong>50-point</strong> inspection on every car</div>
+            <div class="highlight"><strong>3-month</strong> lay-by plan</div>
+            <div class="highlight"><strong>Book & test-drive</strong> today</div>
+          </div>
+        </div>
+
+        <div class="hero__visual reveal" style="--i:0">
+          <div class="car-card" id="parallaxCard">
+            <img id="heroImage" src="images/passo.png" alt="Toyota Passo 2016 hatchback" loading="eager"/>
+            <div class="car-meta">
+              <div>
+                <div id="heroCarName" style="font-weight:800">2016 Toyota Passo</div>
+                <div id="heroCarFuel" class="muted" style="font-size:13px">Petrol</div>
+              </div>
+              <div id="heroCarPrice" class="badge" aria-label="Price 4500 dollars">$4,500</div>
+            </div>
+          </div>
+
+        <div class="hero-thumbs" role="tablist" aria-label="Hero images">
+          <button class="hero-thumb is-active" role="tab" aria-selected="true" data-src="images/passo.png" data-name="2016 Toyota Passo" data-price="4500" data-fuel="Petrol" data-meta="89,000 km • Petrol • Auto" onclick="switchHeroCar(this)">
+            <img src="images/passo.png" alt="Toyota Passo thumbnail" loading="lazy"/>
+          </button>
+          <button class="hero-thumb" role="tab" aria-selected="false" data-src="images/probox.jpg" data-name="Toyota Probox Diesel" data-price="5500" data-fuel="Diesel" data-meta="Diesel" onclick="switchHeroCar(this)">
+            <img src="images/probox.jpg" alt="Toyota Probox thumbnail" loading="lazy"/>
+          </button>
+          <button class="hero-thumb" role="tab" aria-selected="false" data-src="images/sienna.png" data-name="Toyota Sienta 2016" data-price="6500" data-fuel="Petrol" data-meta="Petrol • Auto" onclick="switchHeroCar(this)">
+            <img src="images/sienna.png" alt="Toyota Sienta thumbnail" loading="lazy"/>
+          </button>
+        </div>
+        </div>
+      </div>
+
+      <!-- subtle background shapes -->
+      <svg style="position:absolute;right:-120px;top:-40px;opacity:.06;transform:rotate(8deg)" width="600" height="600" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="300" cy="300" r="300" fill="url(#g)"/></svg>
+    </section>
+
+    <section class="section" id="inventory">
+      <h2>Cars In Stock</h2>
+      <p class="muted">Browse cars ready to buy now, or order directly from Japan with our experts.</p>
+
+      <div class="filters" aria-label="Inventory filters">
+        <input id="searchInput" type="search" placeholder="Search make or model" aria-label="Search cars" />
+        <select id="typeSelect" aria-label="Vehicle type">
+          <option value="">All types</option>
+          <option value="sedan">Sedan</option>
+          <option value="suv">SUV</option>
+          <option value="pickup">Pickup</option>
+          <option value="hatchback">Hatchback</option>
+        </select>
+        <select id="priceSelect" aria-label="Max price">
+          <option value="">Any price</option>
+          <option value="15000">Up to $15,000</option>
+          <option value="20000">Up to $20,000</option>
+          <option value="30000">Up to $30,000</option>
+        </select>
+        <button class="btn btn-ghost" id="clearFilters">Clear</button>
+      </div>
+
+        <div class="grid" id="inventoryGrid">
+        <!-- cards (could be generated server-side) -->
+        <article class="card reveal" data-type="hatchback" data-price="4500" data-name="Toyota Passo 2016" onclick="location.href='car.html?name=Toyota%20Passo%202016&price=4500&img=https%3A%2F%2Fscontent.fhre1-2.fna.fbcdn.net%2Fv%2Ft39.30808-6%2F561726507_1216526417178779_3779744219711410456_n.jpg%3Fstp%3Ddst-jpg_s600x600_tt6%26_nc_cat%3D103%26ccb%3D1-7%26_nc_sid%3D127cfc%26_nc_ohc%3DjRh8rjm2nJwQ7kNvwGOE4YG%26_nc_oc%3DAdmvNV0lFseXsD8zqbicwNeLqOVPL5iDGRupIPgyw0leNgBpyh7NP1u2HZ6Wix0mF4I%26_nc_zt%3D23%26_nc_ht%3Dscontent.fhre1-2.fna%26_nc_gid%3DPCJCBxKomcBJkWOuxkgXHQ%26oh%3D00_Aff8zwy2200lU7dX3v7sdi6aF3OdYA-Th22TtkkR6dj8Sw%26oe%3D68F3741F&meta=89%2C000%20km%20%E2%80%A2%20Petrol%20%E2%80%A2%20Auto'">
+          <img src="https://scontent.fhre1-2.fna.fbcdn.net/v/t39.30808-6/561726507_1216526417178779_3779744219711410456_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=103&ccb=1-7&_nc_sid=127cfc&_nc_ohc=jRh8rjm2nJwQ7kNvwGOE4YG&_nc_oc=AdmvNV0lFseXsD8zqbicwNeLqOVPL5iDGRupIPgyw0leNgBpyh7NP1u2HZ6Wix0mF4I&_nc_zt=23&_nc_ht=scontent.fhre1-2.fna&_nc_gid=PCJCBxKomcBJkWOuxkgXHQ&oh=00_Aff8zwy2200lU7dX3v7sdi6aF3OdYA-Th22TtkkR6dj8Sw&oe=68F3741F" alt="Toyota Passo 2016 hatchback" loading="lazy">
+          <h3>Toyota Passo 2016</h3>
+          <div class="tags"><span class="badge-pill best">Best Buy</span><span class="badge-pill dot">Certified</span></div>
+          <div class="price-row"><div class="permo">Petrol</div><div class="price">$4,500</div></div>
+        </article>
+
+        <article class="card reveal" data-type="hatchback" data-price="5500" data-name="Toyota Probox Diesel" onclick="location.href='car.html?name=Toyota%20Probox%20Diesel&price=5500&img=https%3A%2F%2Fscontent.fhre1-2.fna.fbcdn.net%2Fv%2Ft39.30808-6%2F561067364_1215629283935159_5761146081770315269_n.jpg%3Fstp%3Ddst-jpg_s600x600_tt6%26_nc_cat%3D110%26ccb%3D1-7%26_nc_sid%3D127cfc%26_nc_ohc%3DylFza_mGYEQQ7kNvwE2lGFY%26_nc_oc%3DAdnHeWCJucbOPWLtMuB0tetwV2OCQpJOt7q-cnbBWdR44sudslSbgskIepimiWYMDfo%26_nc_zt%3D23%26_nc_ht%3Dscontent.fhre1-2.fna%26_nc_gid%3D9fWbDqKA9n5_EmsU9kYzew%26oh%3D00_Aff9ufBIc31XZxlcom-C8ar0iC47yVCxvLNphxDCEGO0Qg%26oe%3D68F37F83&meta=Diesel'">
+          <img src="https://scontent.fhre1-2.fna.fbcdn.net/v/t39.30808-6/561067364_1215629283935159_5761146081770315269_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=110&ccb=1-7&_nc_sid=127cfc&_nc_ohc=ylFza_mGYEQQ7kNvwE2lGFY&_nc_oc=AdnHeWCJucbOPWLtMuB0tetwV2OCQpJOt7q-cnbBWdR44sudslSbgskIepimiWYMDfo&_nc_zt=23&_nc_ht=scontent.fhre1-2.fna&_nc_gid=9fWbDqKA9n5_EmsU9kYzew&oh=00_Aff9ufBIc31XZxlcom-C8ar0iC47yVCxvLNphxDCEGO0Qg&oe=68F37F83" alt="Toyota Probox Diesel silver wagon" loading="lazy">
+          <h3>Toyota Probox Diesel</h3>
+          <div class="tags"><span class="badge-pill">Diesel</span></div>
+          <div class="price-row"><div class="permo">Diesel</div><div class="price">$5,500</div></div>
+        </article>
+
+        <article class="card reveal" data-type="van" data-price="6500" data-name="Toyota Sienta 2016" onclick="location.href='car.html?name=Toyota%20Sienta%202016&price=6500&img=https%3A%2F%2Fscontent.fhre1-1.fna.fbcdn.net%2Fv%2Ft39.30808-6%2F559718450_1212807200884034_6068470942309837240_n.jpg%3Fstp%3Ddst-jpg_s600x600_tt6%26_nc_cat%3D106%26ccb%3D1-7%26_nc_sid%3D127cfc%26_nc_ohc%3DrwlaJeJlgZQQ7kNvwGoUQ57%26_nc_oc%3DAdnqhDjXYi4MwPe7LpB7lG514GSYK3_Q1_kA6Xkibse1QBcRZqb59eSrGbg7nEq5-7I%26_nc_zt%3D23%26_nc_ht%3Dscontent.fhre1-1.fna%26_nc_gid%3D9fWbDqKA9n5_EmsU9kYzew%26oh%3D00_Afe6oFvhDKKygMNQtL1U8HX4vF7WlCL4mAImKj2bd8cuoQ%26oe%3D68F38112&meta=Petrol%20%E2%80%A2%20Auto'">
+          <img src="https://scontent.fhre1-1.fna.fbcdn.net/v/t39.30808-6/559718450_1212807200884034_6068470942309837240_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_ohc=rwlaJeJlgZQQ7kNvwGoUQ57&_nc_oc=AdnqhDjXYi4MwPe7LpB7lG514GSYK3_Q1_kA6Xkibse1QBcRZqb59eSrGbg7nEq5-7I&_nc_zt=23&_nc_ht=scontent.fhre1-1.fna&_nc_gid=9fWbDqKA9n5_EmsU9kYzew&oh=00_Afe6oFvhDKKygMNQtL1U8HX4vF7WlCL4mAImKj2bd8cuoQ&oe=68F38112" alt="Toyota Sienta 2016 white MPV" loading="lazy">
+          <h3>Toyota Sienta 2016</h3>
+          <div class="tags"><span class="badge-pill">Petrol</span></div>
+          <div class="price-row"><div class="permo">Petrol</div><div class="price">$6,500</div></div>
+        </article>
+
+        <article class="card reveal" data-type="suv" data-price="9500" data-name="BMW X1 2017" onclick="location.href='car.html?name=BMW%20X1%202017&price=9500&img=https%3A%2F%2Fscontent.fhre1-2.fna.fbcdn.net%2Fv%2Ft51.82787-15%2F561167624_17980479323868042_7753240109467543809_n.webp%3Fstp%3Ddst-jpg_s600x600_tt6%26_nc_cat%3D109%26ccb%3D1-7%26_nc_sid%3D127cfc%26_nc_ohc%3DxTAhWV3QkG4Q7kNvwFEDsiY%26_nc_oc%3DAdmRMZuu2siaymb-CgITAq4H8LHElEfrY3-FavRYSeL3HZpdyLob5j6k7XQ1_EavHP4%26_nc_zt%3D23%26_nc_ht%3Dscontent.fhre1-2.fna%26_nc_gid%3D9fWbDqKA9n5_EmsU9kYzew%26oh%3D00_Afc1pG8F_wA2BZl_vzUgASZpLec5MZRBTa4BlLUI0_Q3ng%26oe%3D68F360BC&meta=Petrol%20%E2%80%A2%20Auto'">
+          <img src="https://scontent.fhre1-2.fna.fbcdn.net/v/t51.82787-15/561167624_17980479323868042_7753240109467543809_n.webp?stp=dst-jpg_s600x600_tt6&_nc_cat=109&ccb=1-7&_nc_sid=127cfc&_nc_ohc=xTAhWV3QkG4Q7kNvwFEDsiY&_nc_oc=AdmRMZuu2siaymb-CgITAq4H8LHElEfrY3-FavRYSeL3HZpdyLob5j6k7XQ1_EavHP4&_nc_zt=23&_nc_ht=scontent.fhre1-2.fna&_nc_gid=9fWbDqKA9n5_EmsU9kYzew&oh=00_Afc1pG8F_wA2BZl_vzUgASZpLec5MZRBTa4BlLUI0_Q3ng&oe=68F360BC" alt="BMW X1 2017 white SUV" loading="lazy">
+          <h3>BMW X1 2017</h3>
+          <div class="tags"><span class="badge-pill">75,000 km</span><span class="badge-pill dot">Auto</span></div>
+          <div class="price-row"><div class="permo">Petrol • Auto</div><div class="price">$9,500</div></div>
+        </article>
+
+        <article class="card reveal" data-type="hatchback" data-price="6000" data-name="BMW 1 Series" onclick="location.href='car.html?name=BMW%201%20Series&price=6000&img=https%3A%2F%2Fscontent.fhre1-1.fna.fbcdn.net%2Fv%2Ft51.82787-15%2F559981604_17980280630868042_3725572623606102803_n.webp%3Fstp%3Ddst-jpg_s600x600_tt6%26_nc_cat%3D107%26ccb%3D1-7%26_nc_sid%3D127cfc%26_nc_ohc%3DbC--sb40d0wQ7kNvwEXVpZB%26_nc_oc%3DAdmsMU9aa4bNX3jUQmDc1yjIiMMAEPBlEpoUXfFdCZKH4lmO-6jLM7eAVkmm8ZFi9hg%26_nc_zt%3D23%26_nc_ht%3Dscontent.fhre1-1.fna%26_nc_gid%3DIulsciHTnas2yM331nRJMg%26oh%3D00_Afe4sSOQucrPWDWOu7-oGdBRTBvfePPbSWfMdn8mhKOZ3g%26oe%3D68F387D1&meta=Petrol%20%E2%80%A2%20Auto'">
+          <img src="https://scontent.fhre1-1.fna.fbcdn.net/v/t51.82787-15/559981604_17980280630868042_3725572623606102803_n.webp?stp=dst-jpg_s600x600_tt6&_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=bC--sb40d0wQ7kNvwEXVpZB&_nc_oc=AdmsMU9aa4bNX3jUQmDc1yjIiMMAEPBlEpoUXfFdCZKH4lmO-6jLM7eAVkmm8ZFi9hg&_nc_zt=23&_nc_ht=scontent.fhre1-1.fna&_nc_gid=IulsciHTnas2yM331nRJMg&oh=00_Afe4sSOQucrPWDWOu7-oGdBRTBvfePPbSWfMdn8mhKOZ3g&oe=68F387D1" alt="BMW 1 Series white hatchback" loading="lazy">
+          <h3>BMW 1 Series</h3>
+          <div class="tags"><span class="badge-pill">65,000 km</span><span class="badge-pill dot">Auto</span></div>
+          <div class="price-row"><div class="permo">Petrol • Auto</div><div class="price">$6,000</div></div>
+        </article>
+
+        <article class="card reveal" data-type="suv" data-price="21000" data-name="Toyota Corolla Cross 2021" onclick="location.href='car.html?name=Toyota%20Corolla%20Cross%202021&price=21000&img=https%3A%2F%2Fscontent.fhre1-1.fna.fbcdn.net%2Fv%2Ft39.30808-6%2F557315085_1205580638273357_5682791355014002946_n.jpg%3Fstp%3Ddst-jpg_s600x600_tt6%26_nc_cat%3D106%26ccb%3D1-7%26_nc_sid%3D833d8c%26_nc_ohc%3D1HX1WYzDA1oQ7kNvwEbnguK%26_nc_oc%3DAdm5-RSoAYH_YhwwvRkGx3Qxl67B2lPTFxOldb93FrDMN85aIkSto1boKVS56N5N8_A%26_nc_zt%3D23%26_nc_ht%3Dscontent.fhre1-1.fna%26_nc_gid%3DIulsciHTnas2yM331nRJMg%26oh%3D00_AfcPqnn5fyLhwrn1yqY-O_Usl7W2wobrr71mCw7sCZnUBA%26oe%3D68F370F2&meta=Petrol%20%E2%80%A2%20Auto'">
+          <img src="https://scontent.fhre1-1.fna.fbcdn.net/v/t39.30808-6/557315085_1205580638273357_5682791355014002946_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=1HX1WYzDA1oQ7kNvwEbnguK&_nc_oc=Adm5-RSoAYH_YhwwvRkGx3Qxl67B2lPTFxOldb93FrDMN85aIkSto1boKVS56N5N8_A&_nc_zt=23&_nc_ht=scontent.fhre1-1.fna&_nc_gid=IulsciHTnas2yM331nRJMg&oh=00_AfcPqnn5fyLhwrn1yqY-O_Usl7W2wobrr71mCw7sCZnUBA&oe=68F370F2" alt="Toyota Corolla Cross 2021 blue SUV" loading="lazy">
+          <h3>Toyota Corolla Cross 2021</h3>
+          <div class="tags"><span class="badge-pill">32,000 km</span><span class="badge-pill dot">Auto</span></div>
+          <div class="price-row"><div class="permo">Petrol • Auto</div><div class="price">$21,000</div></div>
+        </article>
+
+
+        <article class="card reveal" data-type="suv" data-price="17000" data-name="Mercedes Benz GLC 220d" onclick="location.href='car.html?name=Mercedes%20Benz%20GLC%20220d&price=17000&img=https%3A%2F%2Fscontent.fhre1-2.fna.fbcdn.net%2Fv%2Ft51.82787-15%2F547779259_17977472714868042_61153380126499210_n.webp%3Fstp%3Ddst-jpg_s600x600_tt6%26_nc_cat%3D104%26ccb%3D1-7%26_nc_sid%3D127cfc%26_nc_ohc%3DexCO1MRgczwQ7kNvwG4RBl0%26_nc_oc%3DAdmzK0svMs8S8kQXhU0RdME5FAb2LHZt8YTPAT_qw3hwcFW4WiIXV67VVrc8kh5e16Y%26_nc_zt%3D23%26_nc_ht%3Dscontent.fhre1-2.fna%26_nc_gid%3DK0vdmsRIyhDhyd-LWHqjiA%26oh%3D00_Afcgg5uesMarHZ0pFYJ0OADBfGuTA1siPaorbWkVSl2GLw%26oe%3D68F358B7&meta=Diesel%20%E2%80%A2%20Auto'">
+          <img src="https://scontent.fhre1-2.fna.fbcdn.net/v/t51.82787-15/547779259_17977472714868042_61153380126499210_n.webp?stp=dst-jpg_s600x600_tt6&_nc_cat=104&ccb=1-7&_nc_sid=127cfc&_nc_ohc=exCO1MRgczwQ7kNvwG4RBl0&_nc_oc=AdmzK0svMs8S8kQXhU0RdME5FAb2LHZt8YTPAT_qw3hwcFW4WiIXV67VVrc8kh5e16Y&_nc_zt=23&_nc_ht=scontent.fhre1-2.fna&_nc_gid=K0vdmsRIyhDhyd-LWHqjiA&oh=00_Afcgg5uesMarHZ0pFYJ0OADBfGuTA1siPaorbWkVSl2GLw&oe=68F358B7" alt="Mercedes Benz GLC 220d luxury SUV" loading="lazy">
+          <h3>Mercedes Benz GLC 220d</h3>
+          <div class="tags"><span class="badge-pill best">Luxury</span><span class="badge-pill">Diesel</span></div>
+          <div class="price-row"><div class="permo">Diesel • Auto</div><div class="price">$17,000</div></div>
+        </article>
+
+        
+        </div>
+
+      <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+        <a class="btn btn-primary" href="#contact">Book a Test Drive</a>
+        <a class="btn btn-ghost" href="all-cars.html">See All Cars</a>
+      </div>
+    </section>
+
+    <section class="shop-section" aria-label="Shop with Wirom">
+      <div class="shop-section-content">
+        <div class="shop-section-header">
+          <h2>Shop with Wirom</h2>
+          <p class="shop-section-subtitle">We make car buying easy with our comprehensive services and flexible options.</p>
+        </div>
+        
+        <div class="shop-cards-grid">
+          <div class="shop-card reveal">
+            <div class="shop-card-icon">🌏</div>
+            <h3>Import from Japan</h3>
+            <p>Ready to order directly from Japanese auctions. Takes up to 8 weeks to arrive.</p>
+          </div>
+          <div class="shop-card reveal">
+            <div class="shop-card-icon">🇿🇦</div>
+            <h3>Import from South Africa</h3>
+            <p>Sourced from various dealers. Delivery takes about 10 days.</p>
+          </div>
+          <div class="shop-card reveal">
+            <div class="shop-card-icon">🔍</div>
+            <h3>CBA Inspection</h3>
+            <p>All vehicles go through certified 50-point inspection process.</p>
+          </div>
+          <div class="shop-card reveal">
+            <div class="shop-card-icon">💰</div>
+            <h3>Finance Options</h3>
+            <p>We connect you to trusted lenders for competitive rates.</p>
+          </div>
+          <div class="shop-card reveal">
+            <div class="shop-card-icon">📅</div>
+            <h3>3-Month Lay-By</h3>
+            <p>Flexible payment plan to suit your budget and timeline.</p>
+          </div>
+          <div class="shop-card reveal">
+            <div class="shop-card-icon">🚚</div>
+            <h3>Shipping Included</h3>
+            <p>Transparent pricing with all shipping costs included.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="about-grid">
+        <div>
+          <h2>About Wirom</h2>
+          <p class="muted">We are a Zimbabwean-owned marketing and car sales company, connecting customers to high-quality vehicles from Japan and South Africa. At Wirom Beitbridge Carsales, we make importing cars easy, affordable, and trustworthy.</p>
+
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px">
+            <div class="card reveal">
+              <h3>50-Point Inspection</h3>
+              <p class="muted">All vehicles go through a comprehensive 50-point checklist.</p>
+            </div>
+            <div class="card reveal">
+              <h3>3-Month Lay-By</h3>
+              <p class="muted">Flexible 3-month lay-by plan available.</p>
+            </div>
+            <div class="card reveal">
+              <h3>Book & Test-Drive Today</h3>
+              <p class="muted">Schedule your test drive and experience the car firsthand.</p>
+            </div>
+            <div class="card reveal">
+              <h3>We Accept Repayment</h3>
+              <p class="muted">Flexible payment options to suit your budget.</p>
+            </div>
+          </div>
+
+          
+
+          <h2 style="margin-top:26px">Vehicle Sourcing & Delivery</h2>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px">
+            <div class="card reveal">
+              <h3>South African Vehicles</h3>
+              <p class="muted">We source from various car dealers in South Africa. Delivery takes about 10 days.</p>
+            </div>
+            <div class="card reveal">
+              <h3>Japanese Vehicles</h3>
+              <p class="muted">Ordered directly from Japanese auctions. Takes up to 8 weeks to arrive in Zimbabwe.</p>
+            </div>
+          </div>
+
+          <h2 style="margin-top:26px">FAQs</h2>
+          <details class="reveal">
+            <summary>Can I book a same-day test drive?</summary>
+            <p class="muted">Yes, use the contact form or WhatsApp and we’ll confirm availability.</p>
+          </details>
+          <details class="reveal">
+            <summary>Do you offer financing?</summary>
+            <p class="muted">We partner with lenders to provide competitive financing options.</p>
+          </details>
+          <details class="reveal">
+            <summary>How long does delivery take?</summary>
+            <p class="muted">South African vehicles take about 10 days to deliver. Japanese vehicles are ordered directly from Japanese auctions and take up to 8 weeks to arrive in Zimbabwe.</p>
+          </details>
+          <details class="reveal">
+            <summary>Do you offer lay-by?</summary>
+            <p class="muted">Yes, a flexible 3-month lay-by plan is available.</p>
+          </details>
+          <details class="reveal">
+            <summary>Are cars inspected?</summary>
+            <p class="muted">Yes, all cars include CBA Inspection in the listed price.</p>
+          </details>
+          <details class="reveal">
+            <summary>Do you handle shipping?</summary>
+            <p class="muted">Yes, shipping costs are included and we coordinate logistics.</p>
+          </details>
+          <details class="reveal">
+            <summary>Where do you source vehicles from?</summary>
+            <p class="muted">We source from various car dealers in South Africa and directly from Japanese auctions.</p>
+          </details>
+        </div>
+
+        <aside class="contact-card reveal" id="contact">
+          <h3>Contact Us</h3>
+          <p class="muted">Drop your details — we’ll get back within one business day.</p>
+          <form onsubmit="return handleContact(event)">
+            <div class="form-row"><input placeholder="Full name" required id="name" autocomplete="name"/></div>
+            <div class="form-row"><input placeholder="Phone or email" required id="contactinfo" autocomplete="tel"/></div>
+            <div style="margin-top:10px"><textarea placeholder="Interested in..." id="message"></textarea></div>
+            <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn btn-primary" type="submit">Send</button>
+              <button class="btn btn-ghost" type="button" onclick="openWhatsApp()">WhatsApp</button>
+            </div>
+          </form>
+          <div style="margin-top:10px;font-size:13px" class="muted">Or call <a href="tel:+263717313810" style="color:var(--blue);text-decoration:none;font-weight:700">+263 71 731 3810</a> • <a href="https://wa.me/263717313810?text=Hi%20Wirom%2C%20I%27m%20interested%20in%20a%20car." target="_blank" rel="noopener" style="color:var(--yellow);text-decoration:none;font-weight:800">WhatsApp us</a> • <a href="mailto:sales@wirom.co.zw" style="color:var(--yellow);text-decoration:none;font-weight:800">Email</a></div>
+          <div style="margin-top:8px;font-size:13px;display:flex;align-items:center;gap:8px" class="muted">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="color:var(--yellow)">
+              <path d="M22.675 0H1.325C.593 0 0 .593 0 1.326v21.348C0 23.407.593 24 1.325 24h11.494V14.706H9.691v-3.62h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.794.143v3.24l-1.918.001c-1.504 0-1.796.716-1.796 1.767v2.317h3.59l-.467 3.62h-3.123V24h6.116C23.407 24 24 23.407 24 22.674V1.326C24 .593 23.407 0 22.675 0z"/>
+            </svg>
+            <span>Facebook:</span>
+            <a href="https://www.facebook.com/share/177dLZ1N8M/?mibextid=wwXIfr" target="_blank" rel="noopener" style="color:var(--yellow);text-decoration:none;font-weight:800">wirom beitbrdge carsales</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" aria-label="Customer reviews">
+      <h2>What customers say</h2>
+      <div class="testimonials">
+        <div class="quote reveal">
+          <div class="review-head">
+            <div class="avatar" aria-hidden="true">TM</div>
+            <div>
+              <div class="name">Tariro M.</div>
+              <div class="stars" aria-label="5 out of 5">★★★★★</div>
+            </div>
+          </div>
+          <p>“Smooth buying experience and no hidden fees. Highly recommend!”</p>
+        </div>
+        <div class="quote reveal">
+          <div class="review-head">
+            <div class="avatar" aria-hidden="true">KN</div>
+            <div>
+              <div class="name">Kelvin N.</div>
+              <div class="stars" aria-label="5 out of 5">★★★★★</div>
+            </div>
+          </div>
+          <p>“Booked a test drive in minutes and loved the transparency.”</p>
+        </div>
+        <div class="quote reveal">
+          <div class="review-head">
+            <div class="avatar" aria-hidden="true">RK</div>
+            <div>
+              <div class="name">Rudo K.</div>
+              <div class="stars" aria-label="5 out of 5">★★★★★</div>
+            </div>
+          </div>
+          <p>“Great selection and the car was exactly as described.”</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <section class="section" aria-label="How to Buy">
+    <h2>How to Buy</h2>
+    <ol class="steps" aria-label="Step by step buying process">
+      <li class="step">
+        <div class="step-num" aria-hidden="true">1</div>
+        <div class="step-body">
+          <div class="step-title">Browse or Import</div>
+          <div class="step-text">Browse our inventory or tell us the car to import.</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num" aria-hidden="true">2</div>
+        <div class="step-body">
+          <div class="step-title">Test Drive</div>
+          <div class="step-text">Book a same-day test drive for local stock.</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num" aria-hidden="true">3</div>
+        <div class="step-body">
+          <div class="step-title">Payment</div>
+          <div class="step-text">Choose cash, 3‑month lay‑by, or finance.</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num" aria-hidden="true">4</div>
+        <div class="step-body">
+          <div class="step-title">Drive Happy</div>
+          <div class="step-text">Collect your car and enjoy the ride.</div>
+        </div>
+      </li>
+    </ol>
+    <div style="margin-top:16px">
+      <a class="btn btn-primary" href="https://wa.me/263717313810?text=Hi%20Wirom%2C%20I%20want%20to%20buy%20a%20car" target="_blank" rel="noopener">Call Now</a>
+    </div>
+  </section>
+
+  <section class="section" aria-label="Trust and Assurance">
+    <h2>Why Choose Wirom?</h2>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+      <div class="card"><h3>✅ CBA Inspection</h3><p class="muted">All cars include CBA Inspection.</p></div>
+      <div class="card"><h3>✅ Flexible Plans</h3><p class="muted">Finance & 3-month lay-by options.</p></div>
+      <div class="card"><h3>✅ Shipping Included</h3><p class="muted">Transparent pricing with shipping costs included.</p></div>
+      <div class="card" onclick="showDutyPopup()" style="cursor:pointer"><h3>✅ Duties (Shipping Included)</h3><p class="muted">Duty calculation and shipping included in pricing. Click for details.</p></div>
+      <div class="card"><h3>✅ No Hidden Fees</h3><p class="muted">A clear, honest process from start to finish.</p></div>
+    </div>
+  </section>
+
+  <section class="section" aria-label="Map and hours">
+    <h2>Find us</h2>
+    <div style="display:grid;grid-template-columns:1.2fr .8fr;gap:16px">
+      <div style="background:rgba(255,255,255,0.06);border-radius:12px;overflow:hidden">
+        <iframe title="Google Map" src="https://www.google.com/maps?q=Beitbridge%2C%20Zimbabwe&output=embed" width="100%" height="280" style="border:0" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+      <div class="card hours-card">
+        <div class="hours-head">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          <h3 class="hours-title">Opening hours</h3>
+        </div>
+        <ul class="hours-list" aria-label="Office hours">
+          <li><span>Mon–Fri</span><strong>08:00 – 17:00</strong></li>
+          <li><span>Sat</span><strong>09:00 – 13:00</strong></li>
+          <li><span>Sun</span><strong class="closed">Closed</strong></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-label="Browse Inventory">
+    <h2>Browse Our Full Inventory</h2>
+    <p class="muted">Explore our complete collection of quality vehicles from Japan and South Africa.</p>
+    <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+      <a class="btn btn-primary" href="#inventory">View All Cars</a>
+      <a class="btn btn-ghost" href="all-cars.html">Complete Inventory</a>
+      <button class="btn btn-ghost" onclick="openWhatsApp()">WhatsApp Us</button>
+      <a class="btn btn-ghost" href="tel:+263717313810">Call Now</a>
+    </div>
+  </section>
+
+  <section class="section" id="car-manager" style="background:var(--muted);border-radius:12px;margin:20px 6vw;padding:30px;display:none">
+    <div id="loginSection">
+      <h2>Admin Access</h2>
+      <p class="muted">Enter password to access car management system.</p>
+      <div style="margin-top:20px;max-width:300px">
+        <input type="password" id="adminPassword" placeholder="Enter admin password" style="width:100%;padding:12px;border-radius:8px;border:1px solid #ddd;margin-bottom:10px">
+        <button class="btn btn-primary" onclick="checkPassword()">Login</button>
+      </div>
+    </div>
+    
+    <div id="carManagementSection" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <h2>Car Management System</h2>
+        <button class="btn btn-ghost" onclick="logout()">Logout</button>
+      </div>
+      <p class="muted">Add new cars to your inventory easily.</p>
+      
+      <form id="carInputForm" style="margin-top:20px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px">
+          <input type="text" id="carMake" placeholder="Make (e.g., Toyota)" required>
+          <input type="text" id="carModel" placeholder="Model (e.g., Corolla)" required>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px">
+          <input type="number" id="carYear" placeholder="Year" min="1990" max="2025" required>
+          <input type="number" id="carPrice" placeholder="Price ($)" required>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px">
+          <input type="text" id="carMileage" placeholder="Mileage (km)">
+          <select id="carFuel" required>
+            <option value="">Fuel Type</option>
+            <option value="Petrol">Petrol</option>
+            <option value="Diesel">Diesel</option>
+            <option value="Hybrid">Hybrid</option>
+          </select>
+        </div>
+        <div style="margin-bottom:15px">
+          <input type="text" id="carImage" placeholder="Image URL or path (e.g., images/car.jpg)" required>
+        </div>
+        <div style="margin-bottom:15px">
+          <textarea id="carDescription" placeholder="Car description..." rows="3"></textarea>
+        </div>
+        <div style="margin-bottom:15px">
+          <input type="text" id="carTags" placeholder="Tags (comma separated, e.g., Best Buy, Certified)">
+        </div>
+        <button type="submit" class="btn btn-primary" id="submitBtn">
+          <span id="submitText">Add Car to Inventory</span>
+          <span id="submitLoading" style="display:none">Adding...</span>
+        </button>
+      </form>
+      
+      <div id="successMessage" style="margin-top:20px;display:none;padding:15px;background:#d4edda;border:1px solid #c3e6cb;border-radius:8px;color:#155724">
+        ✅ Car added successfully! It will appear in your inventory immediately.
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer-light">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;align-items:start">
+      <div style="display:flex;gap:12px;align-items:center">
+        <img src="images/wirom.jpg" alt="Wirom" class="logo-img" style="height:72px;width:auto" />
+        <div>
+          <strong>Wirom Beitbridge Carsales</strong>
+          <div class="muted" style="font-size:13px">Quality used cars • Trusted service</div>
+        </div>
+      </div>
+      <div class="muted">
+        <div><strong>Contact</strong></div>
+        <div><a href="tel:+263717313810" style="color:inherit;text-decoration:none">+263 71 731 3810</a></div>
+        <div><a href="https://wa.me/263717313810" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">WhatsApp</a></div>
+        <div><a href="mailto:sales@wirom.co.zw" style="color:inherit;text-decoration:none">sales@wirom.co.zw</a></div>
+        <div>Beitbridge, Zimbabwe</div>
+      </div>
+      <div class="muted">
+        <div><strong>Follow Us</strong></div>
+        <div style="display:flex;gap:12px;align-items:center;margin-top:8px">
+          <a href="https://www.facebook.com/share/177dLZ1N8M/?mibextid=wwXIfr" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;display:flex;align-items:center;gap:6px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M22.675 0H1.325C.593 0 0 .593 0 1.326v21.348C0 23.407.593 24 1.325 24h11.494V14.706H9.691v-3.62h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.794.143v3.24l-1.918.001c-1.504 0-1.796.716-1.796 1.767v2.317h3.59l-.467 3.62h-3.123V24h6.116C23.407 24 24 23.407 24 22.674V1.326C24 .593 23.407 0 22.675 0z"/>
+            </svg>
+            Facebook
+          </a>
+        </div>
+        <div style="margin-top:8px">
+        <div><strong>Quick Links</strong></div>
+        <div><a href="#inventory" style="color:inherit;text-decoration:none">Browse Cars</a></div>
+        <div><a href="#about" style="color:inherit;text-decoration:none">About</a></div>
+        <div><a href="#contact" style="color:inherit;text-decoration:none">Contact</a></div>
+        </div>
+      </div>
+    </div>
+    <div class="muted" style="margin-top:12px">© <span id="year"></span> Wirom Car Sales • All rights reserved</div>
+  </footer>
+
+  <button class="fab" id="importFab" aria-label="Buy now" title="Buy now">Buy now</button>
+
+  <div class="import-backdrop" id="importBackdrop" role="dialog" aria-modal="true" aria-labelledby="importTitle" hidden>
+    <div class="import-card">
+      <div class="import-head">
+        <div>
+          <h3 class="import-title" id="importTitle">Did you know you can buy a car and import it home to Zimbabwe</h3>
+          <div class="import-sub">Here is how</div>
+        </div>
+        <button class="import-close" id="importClose" aria-label="Close">Close</button>
+      </div>
+      <div class="import-body">
+        <ol>
+          <li>Contact us and tell us the type of car you want.</li>
+          <li>We source that car for you and if you like it we verify and make the car ready.</li>
+          <li>You make a direct payment to the seller through the bank either in Japan or South Africa depending where the car is located.</li>
+          <li>We present you with the paperwork and we arrange for the duty payment.</li>
+          <li>After the duty has been payed, we then make sure the car is transported to Zimbabwe for the final paperwork.</li>
+          <li>After the paperwork the car will be ready to collection.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="contact-backdrop" id="contactBackdrop" role="dialog" aria-modal="true" aria-labelledby="contactTitle" hidden>
+    <div class="contact-modal">
+      <div class="contact-head">
+        <h3 class="contact-title" id="contactTitle">Contact Wirom</h3>
+        <button class="import-close" id="contactClose" aria-label="Close">Close</button>
+      </div>
+      <div class="contact-body">
+        <div class="contact-row">Phone: <a href="tel:+263717313810">+263 71 731 3810</a></div>
+        <div class="contact-row">WhatsApp: <a href="https://wa.me/263717313810?text=Hi%20Wirom%2C%20I%27m%20interested%20in%20a%20car." target="_blank" rel="noopener">Chat now</a></div>
+        <div class="contact-row">Facebook: <a href="https://www.facebook.com/share/177dLZ1N8M/?mibextid=wwXIfr" target="_blank" rel="noopener">wirom beitbrdge carsales</a></div>
+        <div class="contact-actions">
+          <button class="btn-outline" onclick="openWhatsApp()">Open WhatsApp</button>
+          <a class="btn btn-primary" href="#contact">Go to full form</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="to-top" id="toTop" aria-label="Back to top" title="Back to top">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"></polyline></svg>
+  </button>
+
+  <!-- Car Details Modal -->
+  <div class="car-modal-backdrop" id="carModalBackdrop" role="dialog" aria-modal="true" aria-labelledby="carModalTitle" hidden>
+    <div class="car-modal">
+      <div class="car-modal-head">
+        <h3 class="car-modal-title" id="carModalTitle">Car Details</h3>
+        <button class="car-modal-close" id="carModalClose" aria-label="Close">×</button>
+      </div>
+      <div class="car-modal-body">
+        <img id="carModalImage" src="" alt="Car" style="width:100%;height:300px;object-fit:cover;border-radius:8px;margin-bottom:16px"/>
+        <h2 id="carModalName">Car Name</h2>
+        <div class="car-modal-meta" id="carModalMeta" style="color:#666;margin-bottom:12px"></div>
+        <div class="car-modal-price" id="carModalPrice" style="font-size:24px;font-weight:900;color:#0b1e34;margin-bottom:20px"></div>
+        <div class="car-modal-actions" style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="openWhatsApp()">Contact Us</button>
+          <button class="btn btn-ghost" onclick="closeCarModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
+  
+</html>
+
+
