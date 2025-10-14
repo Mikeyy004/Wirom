@@ -420,40 +420,29 @@ contactBackdrop.addEventListener('click', (e)=>{ if(e.target === contactBackdrop
   }
   window.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && contactBackdrop && !contactBackdrop.hidden) closeContact(); });
 
-// Theme toggle (manual)
-const themeToggle = document.getElementById('themeToggle');
+// Theme: automatic by local time (light 06:00–18:00, dark otherwise)
 const root = document.documentElement;
-  
+
 function applyTheme(theme){
-    if(theme==='light'){ 
-      root.setAttribute('data-theme','light'); 
-      if(themeToggle) {
-        themeToggle.textContent='Dark'; 
-        themeToggle.setAttribute('aria-pressed','true');
-      }
-    }
-    else { 
-      root.removeAttribute('data-theme'); 
-      if(themeToggle) {
-        themeToggle.textContent='Light'; 
-        themeToggle.setAttribute('aria-pressed','false');
-      }
-    }
-  }
-  
-const savedTheme = localStorage.getItem('theme');
-if(savedTheme) applyTheme(savedTheme);
-  
-  if(themeToggle) {
-themeToggle.addEventListener('click', ()=>{
-      console.log('Theme toggle clicked');
-  const next = root.getAttribute('data-theme')==='light' ? 'dark' : 'light';
-  applyTheme(next);
-  localStorage.setItem('theme', next==='light' ? 'light' : 'dark');
-});
+  if(theme==='light'){
+    root.setAttribute('data-theme','light');
   } else {
-    console.error('Theme toggle button not found');
+    root.removeAttribute('data-theme'); // dark is default
   }
+}
+
+function getTimeBasedTheme(){
+  const hour = new Date().getHours();
+  return (hour >= 6 && hour < 18) ? 'light' : 'dark';
+}
+
+// Initial apply based on time
+applyTheme(getTimeBasedTheme());
+
+// Re-evaluate theme on hour change (check every 5 minutes)
+setInterval(()=>{
+  applyTheme(getTimeBasedTheme());
+}, 5 * 60 * 1000);
 
   // Duty calculation popup
   function showDutyPopup(){
