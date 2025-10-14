@@ -458,12 +458,16 @@ details[open]{background:linear-gradient(180deg,rgba(255,255,255,0.12),rgba(255,
 /* Contact list with icons */
 .contact-list{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:10px}
 .contact-list li{display:flex;align-items:center;gap:10px}
-.contact-list a{text-decoration:none;color:var(--blue);font-weight:800}
+.contact-list a{text-decoration:none;color:var(--yellow);font-weight:800}
 .ci{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:999px;background:var(--navy);color:var(--yellow);font-weight:900}
 .ci-phone::before{content:"☎"}
 .ci-wa::before{content:"W"}
 .ci-mail::before{content:"✉"}
 .ci-fb::before{content:"f"}
+
+/* Footer link visibility */
+.footer-classic a{color:var(--yellow);text-decoration:none}
+.footer-classic a:hover{color:#ffffff}
 .about-grid .card{background:linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.06));color:#e6e9ff;border:1px solid rgba(255,255,255,0.10);box-shadow:var(--card-shadow);display:flex;gap:8px;min-height:120px}
 .about-grid .card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(6,20,40,0.14);border-color:rgba(255,255,255,0.16)}
 .about-grid .card h3{margin:0 0 6px;color:#fff;font-weight:900;letter-spacing:.2px}
