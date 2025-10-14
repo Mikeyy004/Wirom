@@ -445,6 +445,9 @@ textarea{min-height:110px}
 
 /* ====== Footer ====== */
 footer{padding:28px 6vw;background:linear-gradient(0deg,rgba(255,255,255,0.04),transparent);color:#c6cbe6}
+footer .grid{grid-template-columns:repeat(3,1fr)}
+@media (max-width:900px){footer .grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:640px){footer .grid{grid-template-columns:1fr}}
 
 /* Opening hours card */
 .hours-card{background:#ffffff !important;color:#06233f;border:1px solid #e7ecf3}
@@ -514,9 +517,9 @@ footer.footer-light a{color:inherit}
   .steps{grid-template-columns:1fr}
   .testimonials{grid-template-columns:1fr}
   /* Keep FAB above footer and avoid overlap */
-  .fab{bottom:calc(96px + env(safe-area-inset-bottom));min-width:110px;height:44px}
+  .fab{bottom:calc(120px + env(safe-area-inset-bottom));min-width:108px;height:44px;right:16px}
   .to-top{bottom:calc(16px + env(safe-area-inset-bottom))}
-  footer{padding-bottom:calc(28px + 96px)}
+  footer{padding:24px 4vw; padding-bottom:calc(28px + 120px)}
 }
 
 /* Very small devices */
