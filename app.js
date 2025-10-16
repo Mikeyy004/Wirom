@@ -48,49 +48,12 @@ if(!prefersReduced && parallaxCard && heroEl){
   heroEl.addEventListener('mouseleave', ()=>{parallaxCard.style.transform='translate(0,0)'});
 }
 
+// Global admin flag
+window.isAdmin = false;
+
 // Hero thumbnail switching
 const heroImage = document.getElementById('heroImage');
-// Fallback car images pool
-const fallbackCars = [
-  'https://images.unsplash.com/photo-1502877338535-766e1452684a?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3',
-  'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3',
-  'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3',
-  'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3',
-  'https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3',
-  'https://images.unsplash.com/photo-1550355291-bbee04a92027?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3'
-];
-let fallbackIdx = 0;
-function nextFallback(){
-  const url = fallbackCars[fallbackIdx % fallbackCars.length];
-  fallbackIdx++;
-  return url;
-}
-function attachFallback(img){
-  if(!img) return;
-  if(img.dataset.fallbackAttached) return;
-  img.dataset.fallbackAttached = '1';
-  img.addEventListener('error', ()=>{
-    const repl = nextFallback();
-    if(img.src === repl) return; // avoid loops
-    img.src = repl;
-  }, { once:false });
-  // If it already failed before handler attached
-  if(img.complete && img.naturalWidth === 0){
-    img.src = nextFallback();
-  }
-}
-// Attach to all current images
-document.querySelectorAll('img').forEach(attachFallback);
-// Observe future images (if any are added dynamically)
-const imgObserver = new MutationObserver((mutations)=>{
-  mutations.forEach(m=>{
-    m.addedNodes.forEach(node=>{
-      if(node.tagName === 'IMG') attachFallback(node);
-      else if(node.querySelectorAll){ node.querySelectorAll('img').forEach(attachFallback); }
-    });
-  })
-});
-imgObserver.observe(document.documentElement, { childList:true, subtree:true });
+// Remove placeholder fallback images: do not replace on error
 function wireHeroThumbs(){
   const thumbs = Array.from(document.querySelectorAll('.hero-thumb'));
   thumbs.forEach(btn=>{
@@ -104,8 +67,6 @@ function wireHeroThumbs(){
       heroImage.style.opacity = '1';
     };
     tmp.onerror = ()=>{
-      const fb = nextFallback();
-      heroImage.src = fb;
       heroImage.style.opacity = '1';
     };
     tmp.src = nextSrc;
@@ -676,7 +637,7 @@ function addCarToGrid(carData, carId) {
       ${tagsHTML}
       <div class="price-row"><div class="permo">${carData.fuel}</div><div class="price">$${Number(carData.price).toLocaleString()}</div></div>
     </div>
-    <button class="delete-car-btn" onclick="deleteCar('${carId}', '${carName}')" title="Delete car">🗑️</button>
+    <button class="delete-car-btn" data-delete-btn="${carId}" title="Delete car" style="display:none">🗑️</button>
   </article>`;
   
   console.log('Generated HTML:', newCarHTML);
@@ -697,6 +658,12 @@ function addCarToGrid(carData, carId) {
     console.log('Card position:', addedCard.getBoundingClientRect());
   } else {
     console.error('Car card not found in DOM after insertion');
+  }
+
+  // Show delete button for admins only
+  if (window.isAdmin) {
+    const btn = inventoryGrid.querySelector(`button[data-delete-btn="${carId}"]`);
+    if (btn) btn.style.display = '';
   }
 }
 
@@ -801,6 +768,9 @@ async function deleteCar(carId, carName) {
   }
 }
 
+// Expose globally so inline or delegated handlers can access
+window.deleteCar = deleteCar;
+
 // Car modal functions
 function showCarDetailsModal(name, price, image, meta) {
   document.getElementById('carModalName').textContent = name;
@@ -863,7 +833,21 @@ function showCarDetailsModal(name, price, image, meta) {
     clickedThumb.setAttribute('aria-selected', 'true');
   }
 
-  // Event listeners for modal
+// Delegate delete button clicks on the inventory grid
+const inventoryGridEl = document.getElementById('inventoryGrid');
+if (inventoryGridEl) {
+  inventoryGridEl.addEventListener('click', (e)=>{
+    const btn = e.target.closest && e.target.closest('button[data-delete-btn]');
+    if (!btn) return;
+    e.stopPropagation();
+    const carId = btn.getAttribute('data-delete-btn');
+    const card = btn.closest('[data-car-id]');
+    const name = card ? card.getAttribute('data-name') : 'this car';
+    deleteCar(carId, name);
+  });
+}
+
+// Event listeners for modal
   document.getElementById('carModalClose')?.addEventListener('click', closeCarModal);
   document.getElementById('carModalBackdrop')?.addEventListener('click', (e) => {
     if (e.target === document.getElementById('carModalBackdrop')) {
@@ -909,6 +893,8 @@ function checkPassword() {
     if (loginSection) loginSection.style.display = 'none';
     if (carManagementSection) carManagementSection.style.display = 'block';
     if (adminPassword) adminPassword.value = '';
+    window.isAdmin = true;
+    toggleAdminControls(true);
   } else {
     alert('Incorrect password. Please try again.');
     const adminPassword = document.getElementById('adminPassword');
@@ -928,4 +914,15 @@ function logout() {
   if (successMessage) successMessage.style.display = 'none';
   if (carManager) carManager.style.display = 'none';
   if (carInputForm) carInputForm.reset();
+  window.isAdmin = false;
+  toggleAdminControls(false);
 }
+
+// Toggle delete buttons visibility across the grid
+function toggleAdminControls(isAdmin){
+  const btns = document.querySelectorAll('button[data-delete-btn]');
+  btns.forEach(btn=>{ btn.style.display = isAdmin ? '' : 'none'; });
+}
+
+// Expose deleteCar globally so inline handlers can call it
+window.deleteCar = deleteCar;
