@@ -16,7 +16,7 @@
   <!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-    import { getFirestore, collection, addDoc, getDocs, onSnapshot, deleteDoc, doc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    import { getFirestore, collection, addDoc, getDocs, getDoc, onSnapshot, deleteDoc, doc, updateDoc, arrayUnion } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
     import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 
@@ -38,7 +38,7 @@
     const auth = getAuth(app);
 
     // Make Firebase available globally
-    window.firebase = { db, storage, auth, collection, addDoc, getDocs, onSnapshot, deleteDoc, doc, updateDoc, ref, uploadBytes, getDownloadURL };
+    window.firebase = { db, storage, auth, collection, addDoc, getDocs, getDoc, onSnapshot, deleteDoc, doc, updateDoc, arrayUnion, ref, uploadBytes, getDownloadURL };
   </script>
 </head>
 <body>
@@ -658,13 +658,17 @@
         <button class="car-modal-close" id="carModalClose" aria-label="Close">×</button>
       </div>
       <div class="car-modal-body">
-        <img id="carModalImage" src="" alt="Car" style="width:100%;height:300px;object-fit:cover;border-radius:8px;margin-bottom:16px"/>
+        <div id="carModalGallery" class="modal-gallery" style="display:flex;gap:8px;overflow-x:auto;margin-bottom:12px"></div>
+        <img id="carModalImage" src="" alt="Car" style="width:100%;height:300px;object-fit:cover;border-radius:8px;margin-bottom:12px"/>
         <h2 id="carModalName">Car Name</h2>
-        <div class="car-modal-meta" id="carModalMeta" style="color:#666;margin-bottom:12px"></div>
-        <div class="car-modal-price" id="carModalPrice" style="font-size:24px;font-weight:900;color:#0b1e34;margin-bottom:20px"></div>
+        <div class="car-modal-meta" id="carModalMeta" style="color:#666;margin-bottom:8px"></div>
+        <div class="car-modal-price" id="carModalPrice" style="font-size:24px;font-weight:900;color:#0b1e34;margin-bottom:12px"></div>
+        <div id="carModalDescription" class="muted" style="margin-bottom:16px"></div>
         <div class="car-modal-actions" style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap">
           <button class="btn btn-primary" onclick="openWhatsApp()">Contact Us</button>
           <button class="btn btn-ghost" onclick="closeCarModal()">Close</button>
+          <button class="btn btn-ghost" id="carModalAddImageBtn" style="display:none">Add image</button>
+          <button class="btn btn-ghost" id="carModalEditDescBtn" style="display:none">Edit description</button>
         </div>
       </div>
     </div>

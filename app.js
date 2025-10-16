@@ -793,16 +793,77 @@ window.editCar = promptEditCar;
 
 // Car modal functions
 function showCarDetailsModal(name, price, image, meta) {
-  document.getElementById('carModalName').textContent = name;
-  document.getElementById('carModalPrice').textContent = `$${Number(price).toLocaleString()}`;
-  document.getElementById('carModalMeta').textContent = meta;
-  document.getElementById('carModalImage').src = image;
-  document.getElementById('carModalTitle').textContent = name;
-  
+  const title = document.getElementById('carModalTitle');
+  const nameEl = document.getElementById('carModalName');
+  const priceEl = document.getElementById('carModalPrice');
+  const metaEl = document.getElementById('carModalMeta');
+  const imgEl = document.getElementById('carModalImage');
+  const descEl = document.getElementById('carModalDescription');
+  const gallery = document.getElementById('carModalGallery');
+  const addImgBtn = document.getElementById('carModalAddImageBtn');
+  const editDescBtn = document.getElementById('carModalEditDescBtn');
+
+  nameEl.textContent = name;
+  priceEl.textContent = `$${Number(price).toLocaleString()}`;
+  metaEl.textContent = meta;
+  imgEl.src = image;
+  title.textContent = name;
+  descEl.textContent = '';
+  gallery.innerHTML = '';
+
+  // Attempt to locate this car in Firebase for extra details (images[], description, imageAlt)
+  // We match by name and image URL currently rendered in cards
+  try {
+    if (window.firebase) {
+      // naive scan of DOM to find card with same name and image
+      const card = Array.from(document.querySelectorAll(`[data-name]`))
+        .find(el => el.getAttribute('data-name') === name && el.querySelector('img') && el.querySelector('img').src === image);
+      const carId = card ? card.getAttribute('data-car-id') : null;
+      if (carId) {
+        // read doc
+        window.firebase.getDoc(window.firebase.doc(window.firebase.db, 'cars', carId)).then(snap=>{
+          if (snap.exists()) {
+            const data = snap.data();
+            if (data.description) descEl.textContent = data.description;
+            if (data.images && Array.isArray(data.images)) {
+              data.images.forEach((url, idx)=>{
+                const thumb = document.createElement('img');
+                thumb.src = url;
+                thumb.alt = data.imageAlt || `${name} image ${idx+1}`;
+                thumb.style.width = '64px';
+                thumb.style.height = '64px';
+                thumb.style.objectFit = 'cover';
+                thumb.style.borderRadius = '6px';
+                thumb.addEventListener('click', ()=>{ imgEl.src = url; });
+                gallery.appendChild(thumb);
+              });
+            }
+            if (data.imageAlt) imgEl.alt = data.imageAlt;
+          }
+        });
+        // Admin controls
+        if (window.isAdmin) {
+          if (addImgBtn) addImgBtn.style.display = '';
+          if (editDescBtn) editDescBtn.style.display = '';
+          addImgBtn.onclick = ()=> adminAddImageToCar(carId, name, gallery, imgEl);
+          editDescBtn.onclick = ()=> adminEditDescription(carId, name, descEl);
+        } else {
+          if (addImgBtn) addImgBtn.style.display = 'none';
+          if (editDescBtn) editDescBtn.style.display = 'none';
+        }
+      } else {
+        if (addImgBtn) addImgBtn.style.display = 'none';
+        if (editDescBtn) editDescBtn.style.display = 'none';
+      }
+    }
+  } catch(err) {
+    console.warn('Could not load extra car details for modal:', err);
+  }
+
   const modal = document.getElementById('carModalBackdrop');
   modal.hidden = false;
   requestAnimationFrame(() => modal.classList.add('visible'));
-  }
+}
 
   function closeCarModal() {
     const modal = document.getElementById('carModalBackdrop');
@@ -908,6 +969,46 @@ if (inventoryGridEl) {
       console.log(`Element "${id}" found`);
     }
   });
+
+  // Admin helpers used in modal
+  window.adminAddImageToCar = async function(carId, carName, galleryEl, mainImg){
+    try {
+      if (!window.firebase) throw new Error('Firebase is not available');
+      const url = prompt(`Add image URL for "${carName}"`);
+      if (!url) return;
+      const ref = window.firebase.doc(window.firebase.db, 'cars', carId);
+      await window.firebase.updateDoc(ref, { images: window.firebase.arrayUnion(url) });
+      const thumb = document.createElement('img');
+      thumb.src = url;
+      thumb.alt = `${carName} image`;
+      thumb.style.width = '64px';
+      thumb.style.height = '64px';
+      thumb.style.objectFit = 'cover';
+      thumb.style.borderRadius = '6px';
+      thumb.addEventListener('click', ()=>{ mainImg.src = url; });
+      galleryEl.appendChild(thumb);
+      alert('Image added');
+    } catch(err){
+      console.error('Failed adding image:', err);
+      alert('Failed to add image');
+    }
+  }
+
+  window.adminEditDescription = async function(carId, carName, descEl){
+    try {
+      if (!window.firebase) throw new Error('Firebase is not available');
+      const current = descEl?.textContent || '';
+      const next = prompt(`Edit description for "${carName}"`, current);
+      if (next === null) return;
+      const ref = window.firebase.doc(window.firebase.db, 'cars', carId);
+      await window.firebase.updateDoc(ref, { description: next });
+      if (descEl) descEl.textContent = next;
+      alert('Description updated');
+    } catch(err){
+      console.error('Failed updating description:', err);
+      alert('Failed to update description');
+    }
+  }
 
   // Basic click functionality is working - debugging code removed for cleaner console
 
