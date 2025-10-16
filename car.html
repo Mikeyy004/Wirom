@@ -6,6 +6,25 @@
   <title>Car • Wirom</title>
   <link rel="stylesheet" href="styles.css" />
   <meta name="theme-color" content="#0F1231" />
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getFirestore, collection, addDoc, getDocs, getDoc, onSnapshot, deleteDoc, doc, updateDoc, arrayUnion } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAF0WirHCXED4eA9v0YYjB-0k3GmtDSddU",
+      authDomain: "wirom-carsale.firebaseapp.com",
+      projectId: "wirom-carsale",
+      storageBucket: "wirom-carsale.firebasestorage.app",
+      messagingSenderId: "641456590541",
+      appId: "1:641456590541:web:7d8b896c36b211c11ae384",
+      measurementId: "G-GVXR6PY22T"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+    window.firebase = { db, storage, collection, addDoc, getDocs, getDoc, onSnapshot, deleteDoc, doc, updateDoc, arrayUnion, ref, uploadBytes, getDownloadURL };
+  </script>
 </head>
 <body>
   <header>
@@ -21,13 +40,22 @@
   <main class="section" style="padding-top:100px">
     <div class="about-grid" style="grid-template-columns:1fr 420px">
       <div>
+        <div id="carGallery" style="display:flex;gap:8px;overflow-x:auto;margin-bottom:10px"></div>
         <img id="carImg" src="" alt="Car" style="width:100%;height:360px;object-fit:cover;border-radius:12px"/>
         <h2 id="carName" style="margin-top:14px">Car</h2>
         <div class="muted" id="carMeta"></div>
+        <div id="carFeaturesWrap" style="margin-top:12px;display:none">
+          <h3 style="margin:6px 0">Features</h3>
+          <ul id="carFeatures" style="padding-left:18px"></ul>
+        </div>
       </div>
       <aside class="contact-card">
-        <div class="meta" style="margin-bottom:12px"><span>Price</span><strong id="carPrice">$0</strong></div>
-        <a class="btn btn-primary icon-btn" href="https://wa.me/263717313810?text=Hi%20I%27m%20interested%20in%20this%20car%20${encodeURIComponent(name)}" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+        <div style="margin-top:0">
+          <h3 style="margin:0 0 6px 0">Description</h3>
+          <div class="muted" id="carDesc"></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <a class="btn btn-primary icon-btn" id="carWaBtn" href="#" target="_blank" rel="noopener" aria-label="Chat on WhatsApp" style="box-shadow:none;display:inline-flex;align-items:center;justify-content:center">
           <svg class="wa-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <circle cx="12" cy="12" r="10" fill="#25D366" />
             <path d="M17.472 14.382c-.297-.149-1.758-.864-2.028-.962-.273-.1-.472-.148-.672.149-.198.297-.767.962-.94 1.158-.173.198-.346.223-.643.074-.297-.149-1.255-.462-2.39-1.47-.88-.78-1.47-1.73-1.64-2.03-.173-.297-.018-.458.13-.606.134-.132.298-.344.446-.518.149-.173.198-.298.298-.497.099-.198.05-.37-.025-.52-.075-.149-.67-1.611-.92-2.208-.244-.597-.49-.515-.67-.525l-.57-.011c-.198 0-.51.074-.778.34-.267.267-1.01 1.01-1.01 2.46 0 1.45 1.04 2.86 1.19 3.06.149.198 2.01 3.36 4.88 4.72 2.87 1.36 2.87.89 3.39.84.52-.05 1.78-.72 2.03-1.39.246-.68.246-1.266.173-1.39-.074-.123-.272-.198-.57-.347z" fill="#fff"/>
@@ -41,6 +69,12 @@
           </svg>
           <span>sales@wirom.co.zw</span>
         </a>
+        </div>
+        <div class="meta" style="margin-top:12px"><span>Price</span><strong id="carPrice">$0</strong></div>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-ghost" id="carAddImageBtn" style="display:none">Edit images</button>
+          <button class="btn btn-ghost" id="carEditDescBtn" style="display:none">Edit description</button>
+        </div>
       </aside>
     </div>
   </main>
@@ -51,12 +85,202 @@
     const price = qp.get('price')||'0';
     const img = qp.get('img');
     const meta = qp.get('meta')||'';
+    let carId = qp.get('id');
     document.title = `${name} • Wirom`;
     document.getElementById('carName').textContent = name;
     document.getElementById('carPrice').textContent = `$${Number(price).toLocaleString()}`;
     document.getElementById('carMeta').textContent = meta;
     const carImg = document.getElementById('carImg');
-    carImg.src = img || 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3';
+    carImg.src = img || '';
+    // Ensure current main image appears as the first thumbnail
+    (function ensureCurrentThumb(){
+      const gallery = document.getElementById('carGallery');
+      if(!gallery || !carImg.src) return;
+      // Add current image as the first thumb if gallery empty
+      const t = document.createElement('img');
+      t.src = carImg.src;
+      t.alt = (name||'Car')+ ' image 1';
+      t.style.width='64px'; t.style.height='64px'; t.style.objectFit='cover'; t.style.borderRadius='6px';
+      t.addEventListener('click', ()=> carImg.src = t.src);
+      if(gallery.firstChild) gallery.insertBefore(t, gallery.firstChild); else gallery.appendChild(t);
+    })();
+    // Fix WhatsApp link building here instead of inline template in HTML
+    const waBtn = document.getElementById('carWaBtn');
+    if (waBtn) {
+      const text = encodeURIComponent(`Hi I'm interested in this car ${name}`);
+      waBtn.href = `https://wa.me/263717313810?text=${text}`;
+    }
+
+    // Admin login wiring happens inside DOMContentLoaded below to avoid double prompts
+    // Temporary description fallback so you can test editing as admin
+    const descEl = document.getElementById('carDesc');
+    if (descEl && !descEl.textContent) {
+      const generic = `${name} — temporary description. Add specs like mileage, condition, service history, ownership, and any extras here.`;
+      descEl.textContent = generic;
+    }
+
+    // If coming from Firebase item, enrich details (description, images[], features[])
+    window.addEventListener('DOMContentLoaded', ()=>{
+      if(!window.firebase) return;
+      (async ()=>{
+        try {
+          // Bind admin shortcuts early so user can enable admin even if carId is unresolved
+          let earlyAdminPromptBound = false;
+          function earlyPromptAdmin(){
+            const pwd = prompt('Enter admin password');
+            if(pwd === 'wirom2024'){ window.isAdmin = true; alert('Admin mode enabled'); }
+            else if(pwd !== null){ alert('Incorrect password'); }
+          }
+          if(!earlyAdminPromptBound){
+            document.addEventListener('keydown', (e)=>{
+              if(e.ctrlKey && e.shiftKey && e.key === 'A'){ e.preventDefault(); earlyPromptAdmin(); }
+            });
+            const earlyLogo = document.querySelector('.logo');
+            if(earlyLogo){
+              let c=0,t=null;
+              earlyLogo.addEventListener('click', ()=>{
+                c++;
+                if(c===1){ t=setTimeout(()=>{c=0},500); }
+                else if(c===2){ clearTimeout(t); c=0; earlyPromptAdmin(); }
+              });
+            }
+            earlyAdminPromptBound = true;
+          }
+          // Resolve carId if missing by matching name to year+make+model in Firestore
+        if(!carId){
+            const snaps = await window.firebase.getDocs(window.firebase.collection(window.firebase.db,'cars'));
+            snaps.forEach(s=>{
+              const d = s.data();
+              const composed = `${(d.year||'').toString().trim()} ${String(d.make||'').trim()} ${String(d.model||'').trim()}`.replace(/\s+/g,' ').trim();
+              const normalizedName = String(name||'').replace(/\s+/g,' ').trim();
+              if(!carId && composed && composed.toLowerCase() === normalizedName.toLowerCase()) carId = s.id;
+            });
+            if(carId){
+              const newUrl = `${location.pathname}?name=${encodeURIComponent(name)}&price=${encodeURIComponent(price)}&img=${encodeURIComponent(img||'')}&meta=${encodeURIComponent(meta)}&id=${encodeURIComponent(carId)}`;
+              history.replaceState(null,'', newUrl);
+            }
+          }
+          // If still no carId after lookup, create a minimal doc so admin mode always works
+          if(!carId){
+            const seed = {
+              title: name,
+              image: img || '',
+              images: img ? [img] : [],
+              price: Number(price)||0,
+              description: (document.getElementById('carDesc')?.textContent)||'',
+              features: [],
+              source: 'wirom-web',
+              createdAt: new Date()
+            };
+            const ref = await window.firebase.addDoc(window.firebase.collection(window.firebase.db,'cars'), seed);
+            carId = ref.id;
+            const newUrl = `${location.pathname}?name=${encodeURIComponent(name)}&price=${encodeURIComponent(price)}&img=${encodeURIComponent(img||'')}&meta=${encodeURIComponent(meta)}&id=${encodeURIComponent(carId)}`;
+            history.replaceState(null,'', newUrl);
+          }
+          const snap = await window.firebase.getDoc(window.firebase.doc(window.firebase.db, 'cars', carId));
+          if(!snap.exists()) return;
+          const data = snap.data();
+          const descEl = document.getElementById('carDesc');
+          if(data.description) descEl.textContent = data.description;
+        const gallery = document.getElementById('carGallery');
+        const currentSrc = carImg.src;
+        if(Array.isArray(data.images)){
+          // Place current image first; skip duplicates when rendering the rest
+          const rest = data.images.filter(u=> u && u !== currentSrc);
+          rest.forEach((url, i)=>{
+              const t = document.createElement('img');
+              t.src = url;
+            t.alt = (data.imageAlt||name)+` image ${i+2}`;
+              t.style.width='64px'; t.style.height='64px'; t.style.objectFit='cover'; t.style.borderRadius='6px';
+              t.addEventListener('click', ()=> carImg.src = url);
+              gallery.appendChild(t);
+            });
+          }
+          if(Array.isArray(data.features) && data.features.length){
+            const wrap = document.getElementById('carFeaturesWrap');
+            const list = document.getElementById('carFeatures');
+            list.innerHTML = '';
+            data.features.forEach(f=>{
+              const li = document.createElement('li');
+              li.textContent = f;
+              list.appendChild(li);
+            });
+            wrap.style.display = '';
+          }
+
+          // Admin controls
+        const addBtn = document.getElementById('carAddImageBtn');
+        const editDescBtn = document.getElementById('carEditDescBtn');
+          function enableCarAdmin(){
+            window.isAdmin = true;
+            addBtn.style.display = '';
+          editDescBtn.style.display = '';
+          }
+        if(window.isAdmin){ enableCarAdmin(); }
+
+          // Allow admin login on this page via shortcuts
+          let adminShortcutsBound = false;
+          function promptAdminLogin(){
+            const pwd = prompt('Enter admin password');
+            if(pwd === 'wirom2024'){ enableCarAdmin(); alert('Admin mode enabled'); }
+            else if(pwd !== null){ alert('Incorrect password'); }
+          }
+          if(!adminShortcutsBound){
+            document.addEventListener('keydown', (e)=>{
+            if(e.ctrlKey && e.shiftKey && e.key === 'A'){ e.preventDefault(); promptAdminLogin(); }
+            });
+            const logo = document.querySelector('.logo');
+            if(logo){
+              let clicks=0, t=null;
+              logo.addEventListener('click', ()=>{
+                clicks++;
+                if(clicks===1){ t=setTimeout(()=>{clicks=0},500); }
+                else if(clicks===2){ clearTimeout(t); clicks=0; promptAdminLogin(); }
+              });
+            }
+            adminShortcutsBound = true;
+          }
+
+          // Bind actions
+          addBtn.onclick = async ()=>{
+            // URL-only flow (upload disabled for now)
+            const inputUrl = prompt('Paste an image URL (https://...)');
+            if(!inputUrl) return;
+            const url = inputUrl.trim();
+            if(!/^https?:\/\//i.test(url)) { alert('Invalid URL'); return; }
+            await window.firebase.updateDoc(window.firebase.doc(window.firebase.db,'cars',carId), { images: window.firebase.arrayUnion(url) });
+            const t = document.createElement('img');
+            t.src=url; t.style.width='64px'; t.style.height='64px'; t.style.objectFit='cover'; t.style.borderRadius='6px';
+            t.addEventListener('click', ()=> carImg.src=url);
+            gallery.appendChild(t);
+          };
+          editDescBtn.onclick = async ()=>{
+            // Turn description into editable textarea with Save/Cancel
+            const container = descEl.parentElement;
+            const current = descEl.textContent || '';
+            const ta = document.createElement('textarea');
+            ta.value = current;
+            ta.rows = 4; ta.style.width='100%'; ta.style.padding='10px'; ta.style.border='1px solid #ddd'; ta.style.borderRadius='8px';
+            const actions = document.createElement('div'); actions.style.marginTop='8px'; actions.style.display='flex'; actions.style.gap='8px';
+            const saveBtn = document.createElement('button'); saveBtn.className='btn btn-primary'; saveBtn.textContent='Save';
+            const cancelBtn = document.createElement('button'); cancelBtn.className='btn btn-ghost'; cancelBtn.textContent='Cancel';
+            actions.appendChild(saveBtn); actions.appendChild(cancelBtn);
+            container.replaceChild(ta, descEl);
+            container.appendChild(actions);
+            saveBtn.onclick = async ()=>{
+              const next = ta.value.trim();
+              await window.firebase.updateDoc(window.firebase.doc(window.firebase.db,'cars',carId), { description: next });
+              descEl.textContent = next;
+              container.replaceChild(descEl, ta);
+              actions.remove();
+            };
+            cancelBtn.onclick = ()=>{ container.replaceChild(descEl, ta); actions.remove(); };
+          };
+        } catch(err) {
+          console.warn('Failed to enrich car page', err);
+        }
+      })();
+    });
   </script>
   <script src="app.js" defer></script>
 </body>

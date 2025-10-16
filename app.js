@@ -624,7 +624,7 @@ function addCarToGrid(carData, carId) {
   }
   
   const newCarHTML = `<article class="card reveal visible" data-type="${carType}" data-price="${carData.price}" data-name="${carName}" data-firebase="true" data-car-id="${carId}">
-    <div class="car-card-content" onclick="location.href='car.html?name=${encodedName}&price=${encodedPrice}&img=${encodedImage}&meta=${encodedMeta}'">
+    <div class="car-card-content" onclick="location.href='car.html?name=${encodedName}&price=${encodedPrice}&img=${encodedImage}&meta=${encodedMeta}&id=${encodeURIComponent(carId)}'">
       <img src="${carData.image}" alt="${carData.imageAlt ? carData.imageAlt : carName}" loading="lazy">
       <h3>${carName}</h3>
       ${tagsHTML}
@@ -859,11 +859,11 @@ function showCarDetailsModal(name, price, image, meta) {
   } catch(err) {
     console.warn('Could not load extra car details for modal:', err);
   }
-
+  
   const modal = document.getElementById('carModalBackdrop');
   modal.hidden = false;
   requestAnimationFrame(() => modal.classList.add('visible'));
-}
+  }
 
   function closeCarModal() {
     const modal = document.getElementById('carModalBackdrop');
@@ -940,9 +940,9 @@ if (inventoryGridEl) {
       promptEditCar(carId, currentName, currentAlt);
     }
   });
-}
+  }
 
-// Event listeners for modal
+  // Event listeners for modal
   document.getElementById('carModalClose')?.addEventListener('click', closeCarModal);
   document.getElementById('carModalBackdrop')?.addEventListener('click', (e) => {
     if (e.target === document.getElementById('carModalBackdrop')) {
