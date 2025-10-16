@@ -420,6 +420,76 @@ contactBackdrop.addEventListener('click', (e)=>{ if(e.target === contactBackdrop
   }
   window.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && contactBackdrop && !contactBackdrop.hidden) closeContact(); });
 
+// Email fallback handling
+const emailAddress = 'sales@wirom.co.zw';
+function tryOpenMailto(url){
+  // Attempt to open mailto; if blocked or no handler, show fallback after short delay
+  let opened = false;
+  try {
+    window.location.href = url;
+    opened = true; // browsers may still fail silently
+  } catch(err){
+    opened = false;
+  }
+  // Show fallback regardless after a tick; harmless if email client did open
+  setTimeout(()=>{
+    openEmailFallback();
+  }, 300);
+}
+
+const emailFallbackBackdrop = document.getElementById('emailFallbackBackdrop');
+const emailFallbackClose = document.getElementById('emailFallbackClose');
+const copyEmailBtn = document.getElementById('copyEmailBtn');
+const openGmailBtn = document.getElementById('openGmailBtn');
+const openYahooBtn = document.getElementById('openYahooBtn');
+
+function openEmailFallback(){
+  if(!emailFallbackBackdrop) return;
+  emailFallbackBackdrop.hidden = false;
+  requestAnimationFrame(()=> emailFallbackBackdrop.classList.add('visible'));
+}
+function closeEmailFallback(){
+  if(!emailFallbackBackdrop) return;
+  emailFallbackBackdrop.classList.remove('visible');
+  setTimeout(()=> emailFallbackBackdrop.hidden = true, 150);
+}
+if(emailFallbackClose) emailFallbackClose.addEventListener('click', closeEmailFallback);
+if(emailFallbackBackdrop){
+  emailFallbackBackdrop.addEventListener('click', (e)=>{ if(e.target === emailFallbackBackdrop) closeEmailFallback(); });
+}
+window.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && emailFallbackBackdrop && !emailFallbackBackdrop.hidden) closeEmailFallback(); });
+
+if(copyEmailBtn){
+  copyEmailBtn.addEventListener('click', async ()=>{
+    try{
+      await navigator.clipboard.writeText(emailAddress);
+      copyEmailBtn.textContent = 'Copied';
+      setTimeout(()=> copyEmailBtn.textContent = 'Copy', 1500);
+    }catch(err){
+      alert('Could not copy. Select and copy manually: ' + emailAddress);
+    }
+  });
+}
+if(openGmailBtn){
+  const subject = encodeURIComponent('Enquiry from website');
+  const body = encodeURIComponent('Hi Wirom, I\'m interested in a car.');
+  openGmailBtn.href = `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(emailAddress)}&su=${subject}&body=${body}`;
+}
+if(openYahooBtn){
+  const subject = encodeURIComponent('Enquiry from website');
+  const body = encodeURIComponent('Hi Wirom, I\'m interested in a car.');
+  openYahooBtn.href = `https://compose.mail.yahoo.com/?to=${encodeURIComponent(emailAddress)}&subject=${subject}&body=${body}`;
+}
+
+// Intercept all mailto links to provide fallback UX
+document.querySelectorAll('a[href^="mailto:"]').forEach(a=>{
+  a.addEventListener('click', (e)=>{
+    e.preventDefault();
+    const url = a.getAttribute('href');
+    tryOpenMailto(url || `mailto:${emailAddress}`);
+  });
+});
+
 // Theme: automatic by local time (light 06:00–18:00, dark otherwise)
 const root = document.documentElement;
 
