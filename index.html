@@ -16,7 +16,7 @@
   <!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-    import { getFirestore, collection, addDoc, getDocs, onSnapshot, deleteDoc, doc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    import { getFirestore, collection, addDoc, getDocs, onSnapshot, deleteDoc, doc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
     import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 
@@ -38,7 +38,7 @@
     const auth = getAuth(app);
 
     // Make Firebase available globally
-    window.firebase = { db, storage, auth, collection, addDoc, getDocs, onSnapshot, deleteDoc, doc, ref, uploadBytes, getDownloadURL };
+    window.firebase = { db, storage, auth, collection, addDoc, getDocs, onSnapshot, deleteDoc, doc, updateDoc, ref, uploadBytes, getDownloadURL };
   </script>
 </head>
 <body>
@@ -498,6 +498,9 @@
         </div>
         <div style="margin-bottom:15px">
           <input type="text" id="carImage" placeholder="Image URL or path (e.g., images/car.jpg)" required>
+        </div>
+        <div style="margin-bottom:15px">
+          <input type="text" id="carImageAlt" placeholder="Image description (alt text, e.g., '2016 Toyota Passo white hatchback')">
         </div>
         <div style="margin-bottom:15px">
           <textarea id="carDescription" placeholder="Car description..." rows="3"></textarea>

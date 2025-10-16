@@ -625,12 +625,15 @@ function addCarToGrid(carData, carId) {
   
   const newCarHTML = `<article class="card reveal visible" data-type="${carType}" data-price="${carData.price}" data-name="${carName}" data-firebase="true" data-car-id="${carId}">
     <div class="car-card-content" onclick="location.href='car.html?name=${encodedName}&price=${encodedPrice}&img=${encodedImage}&meta=${encodedMeta}'">
-      <img src="${carData.image}" alt="${carName}" loading="lazy">
+      <img src="${carData.image}" alt="${carData.imageAlt ? carData.imageAlt : carName}" loading="lazy">
       <h3>${carName}</h3>
       ${tagsHTML}
       <div class="price-row"><div class="permo">${carData.fuel}</div><div class="price">$${Number(carData.price).toLocaleString()}</div></div>
     </div>
-    <button class="delete-car-btn" data-delete-btn="${carId}" title="Delete car" style="display:none">🗑️</button>
+    <div class="admin-actions" style="display:flex;gap:6px;margin-top:6px">
+      <button class="edit-car-btn" data-edit-btn="${carId}" title="Edit car" style="display:none">✏️</button>
+      <button class="delete-car-btn" data-delete-btn="${carId}" title="Delete car" style="display:none">🗑️</button>
+    </div>
   </article>`;
   
   console.log('Generated HTML:', newCarHTML);
@@ -655,8 +658,10 @@ function addCarToGrid(carData, carId) {
 
   // Show delete button for admins only
   if (window.isAdmin) {
-    const btn = inventoryGrid.querySelector(`button[data-delete-btn="${carId}"]`);
-    if (btn) btn.style.display = '';
+    const delBtn = inventoryGrid.querySelector(`button[data-delete-btn="${carId}"]`);
+    const editBtn = inventoryGrid.querySelector(`button[data-edit-btn="${carId}"]`);
+    if (delBtn) delBtn.style.display = '';
+    if (editBtn) editBtn.style.display = '';
   }
 }
 
@@ -685,6 +690,7 @@ document.getElementById('carInputForm')?.addEventListener('submit', async functi
     mileage: document.getElementById('carMileage').value.trim(),
     fuel: document.getElementById('carFuel').value,
     image: document.getElementById('carImage').value.trim(),
+    imageAlt: document.getElementById('carImageAlt').value.trim(),
     description: document.getElementById('carDescription').value.trim(),
     tags: document.getElementById('carTags').value.trim().split(',').map(tag => tag.trim()).filter(tag => tag),
     createdAt: new Date(),
@@ -764,6 +770,27 @@ async function deleteCar(carId, carName) {
 // Expose globally so inline or delegated handlers can access
 window.deleteCar = deleteCar;
 
+// Simple prompt-based editor for admin to update image alt and description
+async function promptEditCar(carId, carName, currentAlt){
+  try {
+    const newAlt = prompt(`Edit image description (alt text) for \"${carName}\"`, currentAlt || '');
+    if (newAlt === null) return; // cancelled
+    // Optionally extend to edit description later
+    if (!window.firebase) throw new Error('Firebase is not available');
+    const ref = window.firebase.doc(window.firebase.db, 'cars', carId);
+    await window.firebase.updateDoc(ref, { imageAlt: newAlt });
+    // Update DOM
+    const card = document.querySelector(`[data-car-id="${carId}"]`);
+    const imgEl = card ? card.querySelector('img') : null;
+    if (imgEl) imgEl.alt = newAlt || card.getAttribute('data-name') || '';
+    alert('Image description updated.');
+  } catch(err){
+    console.error('Error updating car:', err);
+    alert('Failed to update. Please try again.');
+  }
+}
+window.editCar = promptEditCar;
+
 // Car modal functions
 function showCarDetailsModal(name, price, image, meta) {
   document.getElementById('carModalName').textContent = name;
@@ -831,12 +858,26 @@ const inventoryGridEl = document.getElementById('inventoryGrid');
 if (inventoryGridEl) {
   inventoryGridEl.addEventListener('click', (e)=>{
     const btn = e.target.closest && e.target.closest('button[data-delete-btn]');
-    if (!btn) return;
-    e.stopPropagation();
-    const carId = btn.getAttribute('data-delete-btn');
-    const card = btn.closest('[data-car-id]');
-    const name = card ? card.getAttribute('data-name') : 'this car';
-    deleteCar(carId, name);
+    if (btn) {
+      e.stopPropagation();
+      const carId = btn.getAttribute('data-delete-btn');
+      const card = btn.closest('[data-car-id]');
+      const name = card ? card.getAttribute('data-name') : 'this car';
+      deleteCar(carId, name);
+      return;
+    }
+    const edit = e.target.closest && e.target.closest('button[data-edit-btn]');
+    if (edit) {
+      e.stopPropagation();
+      const carId = edit.getAttribute('data-edit-btn');
+      const card = edit.closest('[data-car-id]');
+      if (!card) return;
+      const currentName = card.getAttribute('data-name') || '';
+      const imgEl = card.querySelector('img');
+      const currentAlt = imgEl ? imgEl.alt : '';
+      const currentDesc = card.querySelector('h3') ? '' : '';
+      promptEditCar(carId, currentName, currentAlt);
+    }
   });
 }
 
@@ -913,8 +954,10 @@ function logout() {
 
 // Toggle delete buttons visibility across the grid
 function toggleAdminControls(isAdmin){
-  const btns = document.querySelectorAll('button[data-delete-btn]');
-  btns.forEach(btn=>{ btn.style.display = isAdmin ? '' : 'none'; });
+  const delBtns = document.querySelectorAll('button[data-delete-btn]');
+  const editBtns = document.querySelectorAll('button[data-edit-btn]');
+  delBtns.forEach(btn=>{ btn.style.display = isAdmin ? '' : 'none'; });
+  editBtns.forEach(btn=>{ btn.style.display = isAdmin ? '' : 'none'; });
 }
 
 // Expose deleteCar globally so inline handlers can call it
