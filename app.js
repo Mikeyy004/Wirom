@@ -442,14 +442,7 @@ if(openYahooBtn){
   openYahooBtn.href = `https://compose.mail.yahoo.com/?to=${encodeURIComponent(emailAddress)}&subject=${subject}&body=${body}`;
 }
 
-// Intercept all mailto links to provide fallback UX
-document.querySelectorAll('a[href^="mailto:"]').forEach(a=>{
-  a.addEventListener('click', (e)=>{
-    e.preventDefault();
-    const url = a.getAttribute('href');
-    tryOpenMailto(url || `mailto:${emailAddress}`);
-  });
-});
+// Note: We no longer intercept all mailto links globally to ensure default mail clients/webmail handle them normally on GitHub Pages.
 
 // Theme: automatic by local time (light 06:00–18:00, dark otherwise)
 const root = document.documentElement;
